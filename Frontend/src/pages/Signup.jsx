@@ -1,9 +1,220 @@
-import React from 'react'
+import React, { useState } from "react";
+import WhisperlyLogo from "../components/WhisperlyLogo";
 
 const Signup = () => {
-  return (
-    <div>Signup</div>
-  )
-}
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-export default Signup
+  return (
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6 py-12">
+
+      {/* Background */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-50"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #d4d4d8 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+
+      {/* Soft gradient glows */}
+      <div className="pointer-events-none absolute left-1/2 top-[-180px] h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-200/40 blur-3xl" />
+
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-fuchsia-100/50 blur-3xl" />
+
+      <div className="pointer-events-none absolute -right-32 top-1/3 h-80 w-80 rounded-full bg-indigo-100/50 blur-3xl" />
+
+      {/* Signup Content */}
+      <div className="relative z-10 w-full max-w-md">
+
+        {/* Logo */}
+        <div className="mb-8 flex justify-center">
+          <WhisperlyLogo />
+        </div>
+
+        {/* Card */}
+        <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-[0_20px_70px_rgba(24,24,27,0.08)] sm:p-9">
+
+          {/* Heading */}
+          <div className="text-center">
+            <h1 className="text-2xl font-bold tracking-[-0.03em] text-zinc-900">
+              Create your Whisperly
+            </h1>
+
+            <p className="mt-2 text-sm leading-6 text-zinc-500">
+              Create your space and start receiving anonymous messages.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form className="mt-8 space-y-5">
+
+            {/* Name */}
+            <div>
+              <label
+                htmlFor="username"
+                className="mb-2 block text-sm font-semibold text-zinc-700"
+              >
+                Username
+              </label>
+
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="3.5" />
+                    <path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5" />
+                  </svg>
+                </span>
+
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                />
+              </div>
+            </div>
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-semibold text-zinc-700"
+              >
+                Email address
+              </label>
+
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="5" width="18" height="14" rx="3" />
+                    <path d="m4 7 8 6 8-6" />
+                  </svg>
+                </span>
+
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-semibold text-zinc-700"
+              >
+                Password
+              </label>
+
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="4" y="10" width="16" height="10" rx="2" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                  </svg>
+                </span>
+
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-12 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 transition hover:text-zinc-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? "◉" : "◌"}
+                </button>
+              </div>
+            </div>
+
+            {/* Terms */}
+            <p className="text-xs leading-5 text-zinc-400">
+              By creating an account, you agree to our Terms & Privacy Policy.
+            </p>
+
+            {/* Signup button */}
+            <button
+              type="submit"
+              className="group relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+            >
+              <span className="relative flex items-center gap-2">
+                Create account
+                <span className="transition-transform duration-200 group-hover:translate-x-1">
+                  →
+                </span>
+              </span>
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="my-7 flex items-center gap-3">
+            <div className="h-px flex-1 bg-zinc-100" />
+
+            <span className="text-xs text-zinc-400">
+              already here?
+            </span>
+
+            <div className="h-px flex-1 bg-zinc-100" />
+          </div>
+
+          {/* Login */}
+          <p className="text-center text-sm text-zinc-500">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="font-semibold text-violet-600 transition hover:text-violet-700"
+            >
+              Sign in
+            </a>
+          </p>
+        </div>
+
+        {/* Bottom text */}
+        <p className="mt-6 text-center text-xs leading-5 text-zinc-400">
+          Create your link. Share it anywhere.
+          <br />
+          Let the anonymous messages come to you.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Signup;
