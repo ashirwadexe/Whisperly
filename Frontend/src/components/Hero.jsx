@@ -1,14 +1,36 @@
-import React from "react";
-
+import { Link } from 'react-router-dom'
 const Hero = () => {
+
+const questions = [
+  "I've liked you for a really long time, but I've never had the courage to tell you.",
+  "Tumse ek baat kehni thi... I actually miss talking to you.",
+  "I saw you somewhere today, but I didn't know how to say hello.",
+  "You probably don't know this, but you've helped me through a really difficult time.",
+  "I think I have a crush on you. There, I finally said it.",
+  "Mujhe tumhari ek baat bahut achhi lagti hai, bas kabhi bol nahi paaya.",
+  "Honestly, I was angry with you for a long time.",
+  "I have a secret about you that I've never told anyone.",
+  "Kabhi kabhi lagta hai ki tum mujhe samajhte ho, baaki sabse zyada.",
+  "I wish we were closer than we are right now.",
+  "You hurt me once, and I don't think you ever realized it.",
+  "I don't know if you remember me, but I still remember you.",
+  "Sach bolun? I was jealous when I saw you with them.",
+  "You have no idea how much I admire you.",
+  "I wanted to propose to you, but I got scared.",
+  "Mujhe tumse kuch kehna hai, par saamne bolne ki himmat nahi hai.",
+  "I think we should talk about what happened between us.",
+  "Sometimes I just want to disappear for a while and tell someone everything.",
+  "You're one of the nicest people I've ever met.",
+  "I know we don't talk anymore, but I still hope you're doing okay.",
+];
+
+
   return (
     <section className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-white pt-15">
-
       {/* =========================================================
           BACKGROUND
       ========================================================= */}
 
-      {/* Dot Grid */}
       <div
         className="absolute inset-0 opacity-50"
         style={{
@@ -18,13 +40,10 @@ const Hero = () => {
         }}
       />
 
-      {/* Soft Gradient Glow - Top Center */}
       <div className="absolute left-1/2 top-[-180px] h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-200/40 blur-3xl" />
 
-      {/* Left Glow */}
       <div className="absolute -left-32 top-1/2 h-72 w-72 rounded-full bg-fuchsia-100/50 blur-3xl" />
 
-      {/* Right Glow */}
       <div className="absolute -right-32 top-1/3 h-72 w-72 rounded-full bg-indigo-100/50 blur-3xl" />
 
       {/* =========================================================
@@ -66,17 +85,17 @@ const Hero = () => {
           {/* CTA */}
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
 
-            <button className="group flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-1 hover:bg-zinc-800">
+            <Link to='login' className="group flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-1 hover:bg-zinc-800">
               Create Your Whisperly
 
               <span className="transition-transform duration-200 group-hover:translate-x-1">
                 →
               </span>
-            </button>
+            </Link>
 
-            <button className="rounded-xl border border-zinc-200 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-700 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:bg-zinc-50">
+            <Link to='/signup' className="rounded-xl border border-zinc-200 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-700 shadow-sm transition hover:-translate-y-1 hover:border-zinc-300 hover:bg-zinc-50">
               See How It Works
-            </button>
+            </Link>
 
           </div>
 
@@ -88,20 +107,60 @@ const Hero = () => {
         </div>
 
         {/* =======================================================
+            QUESTION RIVER
+        ======================================================= */}
+
+        <div className="relative mt-14 overflow-hidden py-5">
+
+          {/* Soft fade on both edges */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent sm:w-40" />
+
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent sm:w-40" />
+
+          {/* Flowing questions */}
+          <div className="flex w-max animate-[questionFlow_120s_linear_infinite] gap-10">
+            {[...questions, ...questions].map((question, index) => (
+              <span
+                key={index}
+                className="whitespace-nowrap text-md font-medium tracking-[-0.01em] text-zinc-400 sm:text-lg"
+              >
+                {question}
+              </span>
+            ))}
+          </div>
+
+          {/* Animation */}
+          <style>{`
+            @keyframes questionFlow {
+              from {
+                transform: translateX(0);
+              }
+
+              to {
+                transform: translateX(-50%);
+              }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+              .animate-\\[questionFlow_55s_linear_infinite\\] {
+                animation: none;
+              }
+            }
+          `}</style>
+        </div>
+
+        {/* =======================================================
             VISUAL SECTION
         ======================================================= */}
 
-        <div className="relative mx-auto mt-20 max-w-5xl">
+        <div className="relative mx-auto mt-12 max-w-5xl">
 
           {/* Decorative rings */}
           <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-100" />
 
           <div className="absolute left-1/2 top-1/2 h-[650px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-50" />
 
-          {/* =====================================================
-              FLOATING MESSAGE - LEFT
-          ===================================================== */}
-
+          {/* Floating Message - Left */}
           <div className="absolute -left-2 top-10 z-20 hidden w-64 rotate-[-5deg] rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl shadow-zinc-900/5 sm:block lg:left-4">
 
             <div className="flex items-center gap-3">
@@ -128,10 +187,7 @@ const Hero = () => {
 
           </div>
 
-          {/* =====================================================
-              FLOATING MESSAGE - RIGHT
-          ===================================================== */}
-
+          {/* Floating Message - Right */}
           <div className="absolute -right-2 top-28 z-20 hidden w-64 rotate-[5deg] rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl shadow-zinc-900/5 sm:block lg:right-4">
 
             <div className="flex items-center gap-3">
@@ -158,26 +214,20 @@ const Hero = () => {
 
           </div>
 
-          {/* =====================================================
-              MAIN APP MOCKUP
-          ===================================================== */}
-
+          {/* Main App Mockup */}
           <div className="relative mx-auto max-w-3xl">
 
-            {/* Browser/Dashboard Card */}
             <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-violet-200/40">
 
               {/* Top bar */}
               <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
 
                 <div className="flex items-center gap-2">
-
                   <div className="flex gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
                     <span className="h-2.5 w-2.5 rounded-full bg-yellow-300" />
                     <span className="h-2.5 w-2.5 rounded-full bg-green-300" />
                   </div>
-
                 </div>
 
                 <div className="hidden rounded-lg bg-zinc-50 px-4 py-1.5 text-xs text-zinc-400 sm:block">
@@ -308,10 +358,7 @@ const Hero = () => {
 
             </div>
 
-            {/* =================================================
-                SHARE LINK FLOATING CARD
-            ================================================= */}
-
+            {/* Share link */}
             <div className="absolute -bottom-7 left-1/2 flex w-[90%] -translate-x-1/2 items-center justify-between rounded-2xl border border-zinc-200 bg-white p-3 shadow-xl shadow-zinc-900/10 sm:w-auto sm:min-w-[390px]">
 
               <div className="flex items-center gap-3">
@@ -340,10 +387,7 @@ const Hero = () => {
 
           </div>
 
-          {/* =====================================================
-              PRIVACY BADGE
-          ===================================================== */}
-
+          {/* Privacy Badge */}
           <div className="absolute -bottom-8 -right-2 hidden items-center gap-2 rounded-xl border border-emerald-100 bg-white px-4 py-3 shadow-lg shadow-emerald-100/50 sm:flex lg:right-10">
 
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
@@ -362,13 +406,10 @@ const Hero = () => {
 
           </div>
 
-        </div>  
-
+        </div>
       </div>
-
     </section>
   );
 };
 
 export default Hero;
-
