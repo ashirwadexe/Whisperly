@@ -5,10 +5,10 @@ import Header from '../components/Header'
 
 const DashboardLayout  = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Sidebar/>
 
-      <main>
+      <main className="min-h-screen md:ml-[260px]">
         <Header/>
         <Outlet/>
       </main>
