@@ -6,6 +6,7 @@ import Signup from './pages/Signup'
 import MessageForm from './pages/MessageForm'
 import DashboardLayout from './pages/DashboardLayout '
 import Dashboard from './pages/Dashboard'
+import NotFound404 from './pages/NotFound404'
 
 const App = () => {
   return (
@@ -20,10 +21,9 @@ const App = () => {
           <Route path='message/:id' element={<MessageForm/>} />
 
         </Route>
-        
-
-
-        <Route path='/message' element={<MessageForm/>} />
+      
+        <Route path='/message/:username' element={<MessageForm/>} />
+        <Route path='*' element={<NotFound404/>} />
       </Routes>
     </>
   )

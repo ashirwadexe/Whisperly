@@ -1,5 +1,6 @@
 import React from "react";
 import Stats from "../components/Stats";
+import MessageCard from "../components/MessageCard";
 
 const Dashboard = () => {
   return (
@@ -7,6 +8,7 @@ const Dashboard = () => {
       <div className="mt-[60px] md:mt-0">
         <Stats />
       </div>
+      <MessageCard/>
     </div>
   );
 };
