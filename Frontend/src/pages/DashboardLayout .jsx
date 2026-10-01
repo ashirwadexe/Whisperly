@@ -2,6 +2,7 @@ import React from 'react'
 import Sidebar from '../components/Sidebar'
 import { Outlet } from 'react-router-dom'
 import Header from '../components/Header'
+import Stats from '../components/Stats'
 
 const DashboardLayout  = () => {
   return (
@@ -10,6 +11,7 @@ const DashboardLayout  = () => {
 
       <main className="min-h-screen md:ml-[260px]">
         <Header/>
+        
         <Outlet/>
       </main>
     </div>

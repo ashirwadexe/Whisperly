@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import {
-  Bell,
-  Check,
+  Link2,
   Copy,
-  ExternalLink,
+  Check,
+  Share2,
   MessageCircle,
+  Send,
+  Mail,
   X,
 } from "lucide-react";
 
 const DashboardHeader = () => {
   const [copied, setCopied] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const whisperlyLink = "https://whisperly.app/ashirwad";
 
@@ -28,224 +30,309 @@ const DashboardHeader = () => {
     }
   };
 
+  const shareText = "Send me an anonymous message on Whisperly 👀";
+
+  const shareOnWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(
+      `${shareText}\n${whisperlyLink}`
+    )}`;
+
+    window.open(url, "_blank");
+    setShareOpen(false);
+  };
+
+  const shareOnTelegram = () => {
+    const url = `https://t.me/share/url?url=${encodeURIComponent(
+      whisperlyLink
+    )}&text=${encodeURIComponent(shareText)}`;
+
+    window.open(url, "_blank");
+    setShareOpen(false);
+  };
+
+  const shareOnX = () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}&url=${encodeURIComponent(whisperlyLink)}`;
+
+    window.open(url, "_blank");
+    setShareOpen(false);
+  };
+
+  const shareByEmail = () => {
+    const url = `mailto:?subject=${encodeURIComponent(
+      "Send me an anonymous message"
+    )}&body=${encodeURIComponent(`${shareText}\n\n${whisperlyLink}`)}`;
+
+    window.location.href = url;
+    setShareOpen(false);
+  };
+
   return (
-    <header className="sticky top-[68px] z-30 border-b border-gray-200/80 bg-white/90 backdrop-blur-xl md:top-0">
-      <div className="mx-auto flex h-[76px] max-w-[1600px] items-center gap-3 px-4 sm:px-6 lg:px-8">
+    <header
+      className="
+        sticky top-[68px] z-30
+        border-b border-gray-200/80
+        bg-white/95
+        backdrop-blur-xl
+        md:top-0
+      "
+    >
+      <div className="px-4 py-3 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-2xl">
 
-        {/* =====================================================
-            LINK AREA
-        ===================================================== */}
-        <div className="min-w-0 flex-1">
-
-          <button
-            type="button"
-            onClick={handleCopy}
+          {/* Main Link Container */}
+          <div
+            onClick={() => setShareOpen((prev) => !prev)}
             className="
-              group flex w-full max-w-[620px] items-center gap-3
+              group flex cursor-pointer items-center gap-3
               rounded-2xl border border-gray-200
-              bg-gray-50/70 px-3 py-2
-              text-left
-              hover:border-gray-300 hover:bg-gray-50
-              cursor-pointer
+              bg-white px-3 py-2.5
+              shadow-sm
+              transition
+              hover:border-violet-200
+              hover:shadow-md
             "
           >
             {/* Link Icon */}
             <div
               className="
                 flex h-10 w-10 shrink-0 items-center justify-center
-                rounded-xl bg-white
-                text-violet-600
-                shadow-[0_1px_3px_rgba(0,0,0,0.06)]
-                ring-1 ring-gray-100
+                rounded-xl bg-violet-50 text-violet-600
               "
             >
-              <ExternalLink size={17} strokeWidth={1.8} />
+              <Link2 size={19} strokeWidth={2} />
             </div>
 
-            {/* Link Content */}
+            {/* Link */}
             <div className="min-w-0 flex-1">
+              <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                Your public link
+              </p>
 
-              {/* Desktop small status */}
-              <div className="mb-0.5 hidden items-center gap-1.5 sm:flex">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-
-                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-                  Public link
-                </span>
-              </div>
-
-              <p className="truncate text-[13px] font-semibold text-gray-700 sm:text-sm">
+              <p className="truncate text-sm font-medium text-gray-800">
                 {whisperlyLink}
               </p>
             </div>
 
-            {/* Copy */}
-            <div className="shrink-0">
-
-              {copied ? (
-                <div className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-600">
-                  <Check size={14} strokeWidth={2} />
-                  <span className="hidden sm:inline">Copied</span>
-                </div>
-              ) : (
-                <div
-                  className="
-                    flex h-9 w-9 items-center justify-center
-                    rounded-lg bg-white
-                    text-gray-400
-                    shadow-sm ring-1 ring-gray-100
-                    sm:h-auto sm:w-auto sm:gap-1.5
-                    sm:px-2.5 sm:py-1.5
-                    sm:shadow-none sm:ring-0
-                  "
-                >
-                  <Copy size={15} strokeWidth={1.8} />
-
-                  <span className="hidden text-xs font-semibold sm:inline">
-                    Copy
-                  </span>
-                </div>
-              )}
-            </div>
-          </button>
-        </div>
-
-        {/* =====================================================
-            RIGHT SIDE
-        ===================================================== */}
-        <div className="flex shrink-0 items-center gap-2">
-
-          {/* Vertical divider */}
-          <div className="mr-1 hidden h-8 w-px bg-gray-200 sm:block" />
-
-          {/* Notifications */}
-          <div className="relative">
-
+            {/* Share Button */}
             <button
-              type="button"
-              onClick={() =>
-                setNotificationsOpen((previous) => !previous)
-              }
-              aria-label="Notifications"
-              className={`
-                relative flex h-11 w-11 items-center justify-center
-                rounded-xl border
-                cursor-pointer
-                ${
-                  notificationsOpen
-                    ? "border-gray-300 bg-gray-50 text-gray-900"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
-                }
-              `}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShareOpen((prev) => !prev);
+              }}
+              className="
+                flex h-10 w-10 shrink-0 items-center justify-center
+                rounded-xl border border-gray-200
+                text-gray-500
+                transition
+                hover:border-violet-200
+                hover:bg-violet-50
+                hover:text-violet-600
+              "
+              title="Share your link"
             >
-              <Bell size={19} strokeWidth={1.8} />
-
-              {/* Unread dot */}
-              <span className="absolute right-[9px] top-[8px] h-2 w-2 rounded-full bg-violet-600 ring-2 ring-white" />
+              <Share2 size={18} />
             </button>
 
-            {/* =================================================
-                NOTIFICATION PANEL
-            ================================================= */}
-            {notificationsOpen && (
-              <div
-                className="
-                  fixed left-4 right-4 top-[84px]
-                  overflow-hidden rounded-2xl
-                  border border-gray-200 bg-white
-                  shadow-[0_20px_70px_rgba(0,0,0,0.12)]
+            {/* Copy Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopy();
+              }}
+              className={`
+                flex h-10 shrink-0 items-center justify-center gap-2
+                rounded-xl px-3
+                text-sm font-medium
+                transition
+                ${
+                  copied
+                    ? "bg-green-50 text-green-600"
+                    : "bg-gray-900 text-white hover:bg-gray-800"
+                }
+              `}
+              title="Copy link"
+            >
+              {copied ? (
+                <>
+                  <Check size={16} />
+                  <span className="hidden sm:inline">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={16} />
+                  <span className="hidden sm:inline">Copy</span>
+                </>
+              )}
+            </button>
+          </div>
 
-                  sm:absolute sm:left-auto sm:right-0
-                  sm:top-[52px] sm:w-[370px]
+          {/* Share Apps Popup */}
+          {shareOpen && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="
+                absolute left-0 right-0 top-[calc(100%+10px)] z-50
+                rounded-2xl border border-gray-200
+                bg-white p-3
+                shadow-xl shadow-gray-200/50
+              "
+            >
+              <div className="mb-3 flex items-center justify-between px-1">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    Share your link
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Let people send you anonymous messages
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShareOpen(false)}
+                  className="
+                    rounded-lg p-1.5
+                    text-gray-400
+                    hover:bg-gray-100
+                    hover:text-gray-700
+                  "
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Share Apps */}
+              <div className="grid grid-cols-4 gap-2">
+
+                {/* WhatsApp */}
+                <button
+                  onClick={shareOnWhatsApp}
+                  className="
+                    flex flex-col items-center gap-1.5
+                    rounded-xl p-3
+                    text-gray-600
+                    transition
+                    hover:bg-green-50 hover:text-green-600
+                  "
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50">
+                    <MessageCircle size={19} />
+                  </div>
+                  <span className="text-[11px] font-medium">
+                    WhatsApp
+                  </span>
+                </button>
+
+                {/* Telegram */}
+                <button
+                  onClick={shareOnTelegram}
+                  className="
+                    flex flex-col items-center gap-1.5
+                    rounded-xl p-3
+                    text-gray-600
+                    transition
+                    hover:bg-blue-50 hover:text-blue-600
+                  "
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+                    <Send size={18} />
+                  </div>
+                  <span className="text-[11px] font-medium">
+                    Telegram
+                  </span>
+                </button>
+
+                {/* X */}
+                <button
+                  onClick={shareOnX}
+                  className="
+                    flex flex-col items-center gap-1.5
+                    rounded-xl p-3
+                    text-gray-600
+                    transition
+                    hover:bg-gray-100 hover:text-gray-900
+                  "
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
+                    <X size={18} />
+                  </div>
+                  <span className="text-[11px] font-medium">
+                    X
+                  </span>
+                </button>
+
+                {/* Email */}
+                <button
+                  onClick={shareByEmail}
+                  className="
+                    flex flex-col items-center gap-1.5
+                    rounded-xl p-3
+                    text-gray-600
+                    transition
+                    hover:bg-violet-50 hover:text-violet-600
+                  "
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
+                    <Mail size={18} />
+                  </div>
+                  <span className="text-[11px] font-medium">
+                    Email
+                  </span>
+                </button>
+              </div>
+
+              {/* Copy inside share panel */}
+              <button
+                onClick={handleCopy}
+                className="
+                  mt-2 flex w-full items-center justify-center gap-2
+                  rounded-xl border border-gray-200
+                  px-4 py-2.5
+                  text-sm font-medium text-gray-700
+                  transition
+                  hover:bg-gray-50
                 "
               >
-
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900">
-                      Notifications
-                    </h3>
-
-                    <p className="mt-0.5 text-xs text-gray-400">
-                      Updates from your Whisperly
-                    </p>
-                  </div>
-
-                  {/* Mobile close */}
-                  <button
-                    type="button"
-                    onClick={() => setNotificationsOpen(false)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-50 hover:text-gray-700 sm:hidden"
-                  >
-                    <X size={17} />
-                  </button>
-                </div>
-
-                {/* New message */}
-                <div className="flex gap-3 border-b border-gray-100 px-5 py-4 hover:bg-gray-50">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                    <MessageCircle size={18} strokeWidth={1.8} />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-sm font-semibold text-gray-800">
-                        New anonymous message
-                      </p>
-
-                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-violet-600" />
-                    </div>
-
-                    <p className="mt-1 text-xs leading-5 text-gray-500">
-                      Someone just sent you a new whisper.
-                    </p>
-
-                    <p className="mt-2 text-[11px] text-gray-400">
-                      2 minutes ago
-                    </p>
-
-                  </div>
-                </div>
-
-                {/* Profile notification */}
-                <div className="flex gap-3 px-5 py-4 hover:bg-gray-50">
-
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                    <Check size={18} strokeWidth={1.8} />
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">
-                      Your profile is ready
-                    </p>
-
-                    <p className="mt-1 text-xs leading-5 text-gray-500">
-                      Your Whisperly link is ready to share.
-                    </p>
-
-                    <p className="mt-2 text-[11px] text-gray-400">
-                      Yesterday
-                    </p>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="border-t border-gray-100 bg-gray-50/60 px-5 py-3.5">
-                  <button
-                    type="button"
-                    className="w-full text-center text-xs font-semibold text-gray-500 hover:text-gray-800"
-                  >
-                    View all notifications →
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+                {copied ? (
+                  <>
+                    <Check size={16} className="text-green-600" />
+                    <span className="text-green-600">
+                      Link copied!
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={16} />
+                    Copy link
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Mobile Copy Feedback */}
+        {copied && (
+          <div
+            className="
+              fixed bottom-5 left-1/2 z-[100]
+              flex -translate-x-1/2 items-center gap-2
+              rounded-full
+              border border-green-100
+              bg-white
+              px-4 py-2.5
+              text-sm font-medium text-gray-800
+              shadow-lg shadow-gray-200/60
+            "
+          >
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-600">
+              <Check size={13} strokeWidth={2.5} />
+            </div>
+
+            Link copied!
+          </div>
+        )}
       </div>
     </header>
   );
