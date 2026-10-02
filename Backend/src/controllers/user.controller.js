@@ -133,7 +133,7 @@ export const logout = async (req, res) => {
     try {
         return res.status(200).cookie("token", "", {maxAge: 0, httpOnly: true, sameSite: "strict"}).json({
             message: "Logged out!",
-            success: false
+            success: true
         });
     } catch (error) {
         console.log("Logout error: ", error);
