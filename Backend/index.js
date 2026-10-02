@@ -1,7 +1,8 @@
 import express from 'express';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './src/configs/db.js';
+import userRouter from './src/routes/user.route.js';
 
 // forcing nodejs to use google or cloudflare's dns server
 import dns from "dns";
@@ -19,6 +20,9 @@ const PORT = process.env.PORT || 5000;
 app.get('/', (req, res) => {
     res.send("Home")
 });
+
+// api's
+app.use("/api/auth", userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)

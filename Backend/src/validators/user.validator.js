@@ -2,24 +2,24 @@ import { z } from 'zod';
 
 export const userRegisterValidator = z.object({
     username: z
-        .string
+        .string()
         .min(3, "Username must be at least 3 characters!"),
 
     email: z
-        .string
+        .string()
         .email("Invalid email address!"),
 
     password: z
-        .string
+        .string()
         .min(6, "Password must be at least 6 characters!")
 });
 
 export const userLoginValidator = z.object({
      email: z
-        .string
+        .string()
         .email("Invalid email address!"),
 
     password: z
-        .string
+        .string()
         .min(6, "Password must be at least 6 characters!")
 });
