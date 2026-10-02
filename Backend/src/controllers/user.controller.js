@@ -142,3 +142,54 @@ export const logout = async (req, res) => {
         });
     };
 };
+
+// userProfile
+// GET: /api/auth/profile
+export const userProfile = async (req, res) => {
+    try {
+        const { _id, username, email } = req.user;
+
+        return res.status(200).json({
+            success: true,
+            user: {
+                id: _id,
+                username,
+                email
+            }
+        });
+
+    } catch (error) {
+        console.log("Profile error: ", error);
+        return res.status(500).json({
+            message: error.message
+        });
+    };
+};
+
+// delete
+// DELETE: /api/auth/delete
+export const deleteAccount = async (req, res) => {
+    try {
+        const userId = req.user;
+        if(!userId) {
+            return res.status(401).json({
+                message: "Account not exist!",
+                success: false
+            });
+        };
+
+        await User.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            message: "Account deleted!",
+            success: true
+        });
+
+
+    } catch (error) {
+        console.log("deleteAccount error: ", error);
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
