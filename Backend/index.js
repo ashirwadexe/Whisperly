@@ -1,6 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser';
+import { connectDB } from './src/configs/db.js';
+
+// forcing nodejs to use google or cloudflare's dns server
+import dns from "dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 
 dotenv.config();
 
@@ -16,4 +22,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)
+    connectDB()
 });
