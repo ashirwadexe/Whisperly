@@ -174,7 +174,43 @@ export const getFavouriteMessages = async (req, res) => {
 //GET: /api/messages/stats
 export const messageStats = async (req, res) => {
     try {
-        
+        const userId = req.user;
+
+        // total messages received be a user
+        const totalMessages = await Message.countDocuments({
+            user: userId
+        });
+
+        // start of today
+        const startOfToday = new Date();
+        startOfToday.setHours(0,0,0,0);
+
+        // start of tomorrow
+        const startOfTomorrow = new Date(startOfToday);
+        startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+        // messages reeived today
+        const messagesToday = await Message.countDocuments({
+            user: userId,
+            createdAt: {
+                $gte: startOfToday,
+                $lt: startOfTomorrow
+            }
+        });
+
+        // get user's link visits count
+        const user = await User.findById(userId).select("linkVisits");
+
+        return res.status(200).json({
+            success: true,
+            stats: {
+                totalMessages,
+                messagesToday,
+                totalLinkVisits: user.linkVisits
+            },
+        });
+
+
     } catch (error) {
         console.log("Stats messages error: ", error);
         return res.status(500).json({
