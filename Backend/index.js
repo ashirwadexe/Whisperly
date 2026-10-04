@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './src/configs/db.js';
 import userRouter from './src/routes/user.route.js';
 import messageRouter from './src/routes/message.route.js';
+import notificationRouter from './src/routes/notifications.routes.js';
 
 // forcing nodejs to use google or cloudflare's dns server
 import dns from "dns";
@@ -24,7 +25,8 @@ app.get('/', (req, res) => {
 
 // api's
 app.use("/api/auth", userRouter);
-app.use("/api/messages", messageRouter)
+app.use("/api/messages", messageRouter);
+app.use("/api/notifications", notificationRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)

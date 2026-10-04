@@ -8,6 +8,6 @@ router.route("/").get(isAuthenticated, getMessages);
 router.route("/:id").delete(isAuthenticated, deleteMessage);
 router.route("/:messageId/favourite").patch(isAuthenticated, toggleFavourite);
 router.route("/favourite").get(isAuthenticated, getFavouriteMessages);
-router.route("/stats").get(isAuthenticated, messageStats)
+router.route("/stats").get(isAuthenticated, messageStats);
 
 export default router;

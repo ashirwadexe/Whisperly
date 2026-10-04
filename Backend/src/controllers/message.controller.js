@@ -1,4 +1,5 @@
 import Message from "../models/message.model.js";
+import Notification from "../models/notification.model.js";
 import User from "../models/user.model.js";
 import messageFromValidator from "../validators/message.validator.js";
 
@@ -6,8 +7,8 @@ import messageFromValidator from "../validators/message.validator.js";
 // POST: /api/messages/:username
 export const message = async (req, res) => {
     try {
-        const username = req.params;
-        const usernameExist = await User.findOne(username);
+        const {username} = req.params;
+        const usernameExist = await User.findOne({username});
         if(!usernameExist) {
             return res.status(400).json({
                 message: "Receiver not exist, wrong link!",
@@ -30,6 +31,14 @@ export const message = async (req, res) => {
         const messageData = await Message.create({
             message,
             user: userId
+        });
+
+        // CREATING NOTICIFICATION FOR THE USER AFTER MESSAFE IS CREATED
+        await Notification.create({
+            user: userId,
+            relatedMessage: message._id,
+            type: "NEW_MESSAGE",
+            message: "You have received a new anonymous message."
         });
 
         return res.status(201).json({
@@ -178,7 +187,7 @@ export const messageStats = async (req, res) => {
 
         // total messages received be a user
         const totalMessages = await Message.countDocuments({
-            user: userId
+            user: userId._id
         });
 
         // start of today
