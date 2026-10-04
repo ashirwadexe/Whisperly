@@ -154,5 +154,31 @@ export const toggleFavourite = async (req, res) => {
             message: "Internal server error",
             success: false
         });
-    }
-}
+    };
+};
+
+// GET ALL FAVOURITE MESSAGES
+// GET: /api/messages/favourite
+export const getFavouriteMessages = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const messages = await Message.find({
+            user: userId,
+            favourite: true
+        }).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            messages
+        });
+
+    } catch (error) {
+        console.log("Get Favourite messages error:", error);
+
+        return res.status(500).json({
+            message: error.message,
+            success: false
+        });
+    };
+};
