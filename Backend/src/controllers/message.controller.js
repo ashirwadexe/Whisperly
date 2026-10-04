@@ -104,20 +104,6 @@ export const deleteMessage = async (req, res) => {
     };
 };
 
-// MESSAGE STATS
-//GET: /api/messages/stats
-export const messageStats = async (req, res) => {
-    try {
-        
-    } catch (error) {
-        console.log("Stats messages error: ", error);
-        return res.status(500).json({
-            message: "Internal server error",
-            success: false
-        });
-    };
-};
-
 // FAVOURITE MESSAGES  
 // PATCH: /api/messages/:id/favourite
 export const toggleFavourite = async (req, res) => {
@@ -178,6 +164,21 @@ export const getFavouriteMessages = async (req, res) => {
 
         return res.status(500).json({
             message: error.message,
+            success: false
+        });
+    };
+};
+
+
+// MESSAGE STATS
+//GET: /api/messages/stats
+export const messageStats = async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.log("Stats messages error: ", error);
+        return res.status(500).json({
+            message: "Internal server error",
             success: false
         });
     };

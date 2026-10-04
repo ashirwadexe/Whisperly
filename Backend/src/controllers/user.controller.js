@@ -191,5 +191,38 @@ export const deleteAccount = async (req, res) => {
         return res.status(500).json({
             message: error.message
         });
+    };
+};
+
+// TOTAL LINK VISITS
+// GET: /api/auth/:username
+export const openMessageLink = async (req, res) => {
+    try {
+        const { username } = req.params;
+        const user = await User.findOne({username});
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found!",
+                success: false
+            });
+        };
+
+        // count this link visit by anonymous user
+        user.linkVisits += 1;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            user: {
+                username: user.username
+            }
+        });
+
+    } catch (error) {
+        console.log("open message link error: ", error);
+        return res.status(500).json({
+            message: error.message
+        });
     }
 }

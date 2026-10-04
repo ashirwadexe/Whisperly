@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 6
+    },
+    linkVisits: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
