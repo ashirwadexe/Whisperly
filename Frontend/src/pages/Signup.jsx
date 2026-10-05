@@ -3,13 +3,12 @@ import WhisperlyLogo from "../components/WhisperlyLogo";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  
-
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: ""
   });
+  const [erros, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
@@ -18,9 +17,46 @@ const Signup = () => {
     })
   };
 
+  const inputValidation = () => {
+    // everytime userwill submit previous errors will became zero and new one's will be added in it
+    const newErrors = {};
+
+    if(!formData.username.trim()){
+      newErrors.username = "Username is required!"
+    } 
+    else if(formData.username.length < 3){
+      newErrors.username = "Username should be of 3 characters!"
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!formData.email.trim()){
+      newErrors.email = "Email is required"
+    }
+    else if(!emailRegex.test(formData.email)){
+      newErrors.email = "Enter a valid email!"
+    }
+
+    if(!formData.password.trim()){
+      newErrors.password = "Password is required!"
+    }
+    else if(formData.password.length < 6){
+      newErrors.password = "Password should be of 6 characters!"
+    }
+
+    return newErrors;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const newErrors = inputValidation();
+    setErrors(newErrors);
+    if(Object.keys(newErrors).length > 0){
+      return;
+    };
+    
     console.log(formData);
+
 
     // empty the input fields after successful form submission
     setFormData({
@@ -109,6 +145,9 @@ const Signup = () => {
                   value={formData.username}
                   onChange={handleChange}
                 />
+                {erros.username && (
+                  <p className="text-xs text-red-500">{erros.username}</p>
+                )}
               </div>
             </div>
 
@@ -147,6 +186,9 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {erros.email && (
+                  <p className="text-xs text-red-500">{erros.email}</p>
+                )}
               </div>
             </div>
 
@@ -185,6 +227,9 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
+                {erros.password && (
+                  <p className="text-xs text-red-500">{erros.password}</p>
+                )}
 
                 <button
                   type="button"
