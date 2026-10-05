@@ -49,7 +49,7 @@ const MessageForm = () => {
       {/* Page */}
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-2xl flex-col px-4 py-6 sm:px-6 sm:py-8">
         {/* Top brand */}
-        <Link to='/'>
+        <Link to="/">
           <div className="flex items-center justify-center">
             <div className="flex items-center gap-2.5">
               <WhisperlyLogo className="h-9 w-9" />

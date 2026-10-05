@@ -4,9 +4,32 @@ import WhisperlyLogo from "../components/WhisperlyLogo";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+
+    // empty the input feilds after successful form submission
+    setFormData({
+      email: "",
+      password: ""
+    });
+  };
+
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6 py-12">
-
       {/* Background */}
       <div
         className="pointer-events-none absolute inset-0 opacity-50"
@@ -26,14 +49,12 @@ const Login = () => {
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md">
-
         {/* Logo */}
         <div className="mb-8 flex justify-center">
           <WhisperlyLogo />
         </div>
 
         <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-[0_20px_70px_rgba(24,24,27,0.08)] sm:p-9">
-
           {/* Heading */}
           <div className="text-center">
             <h1 className="text-2xl font-bold tracking-[-0.03em] text-zinc-900">
@@ -46,8 +67,10 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form className="mt-8 space-y-5">
-
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-5"
+          >
             {/* Email */}
             <div>
               <label
@@ -79,6 +102,9 @@ const Login = () => {
                   type="email"
                   placeholder="you@example.com"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -93,9 +119,7 @@ const Login = () => {
                   Password
                 </label>
 
-                <p
-                  className="text-xs font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer"
-                >
+                <p className="text-xs font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer">
                   Forgot password?
                 </p>
               </div>
@@ -122,6 +146,9 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-12 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
 
                 <button
@@ -130,37 +157,7 @@ const Login = () => {
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 transition hover:text-zinc-700"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? (
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 3l18 18" />
-                      <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                      <path d="M9.9 5.1A10.8 10.8 0 0 1 12 5c5 0 8.5 4.2 9.5 7-.3 1-1 2.1-1.9 3" />
-                      <path d="M6.2 6.2C4.4 7.4 3.2 9.2 2.5 12c1 2.8 4.5 7 9.5 7 1.4 0 2.7-.3 3.8-.8" />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z" />
-                      <circle cx="12" cy="12" r="2.5" />
-                    </svg>
-                  )}
+                  {showPassword ? "◉" : "◌"}
                 </button>
               </div>
             </div>

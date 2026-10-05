@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    // empty the input fields after successful form submission
+    setFormData({
+      username: "",
+      email: "",
+      password: ""
+    });
+  }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6 py-12">
-
       {/* Background */}
       <div
         className="pointer-events-none absolute inset-0 opacity-50"
@@ -27,7 +51,6 @@ const Signup = () => {
 
       {/* Signup Content */}
       <div className="relative z-10 w-full max-w-md">
-
         {/* Logo */}
         <div className="mb-8 flex justify-center">
           <WhisperlyLogo />
@@ -35,7 +58,6 @@ const Signup = () => {
 
         {/* Card */}
         <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-[0_20px_70px_rgba(24,24,27,0.08)] sm:p-9">
-
           {/* Heading */}
           <div className="text-center">
             <h1 className="text-2xl font-bold tracking-[-0.03em] text-zinc-900">
@@ -48,8 +70,10 @@ const Signup = () => {
           </div>
 
           {/* Form */}
-          <form className="mt-8 space-y-5">
-
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-5"
+          >
             {/* Name */}
             <div>
               <label
@@ -81,6 +105,9 @@ const Signup = () => {
                   type="text"
                   placeholder="Enter your username"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -116,6 +143,9 @@ const Signup = () => {
                   type="email"
                   placeholder="you@example.com"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -151,6 +181,9 @@ const Signup = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-12 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
 
                 <button
@@ -187,9 +220,7 @@ const Signup = () => {
           <div className="my-7 flex items-center gap-3">
             <div className="h-px flex-1 bg-zinc-100" />
 
-            <span className="text-xs text-zinc-400">
-              already here?
-            </span>
+            <span className="text-xs text-zinc-400">already here?</span>
 
             <div className="h-px flex-1 bg-zinc-100" />
           </div>
