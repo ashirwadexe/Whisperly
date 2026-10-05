@@ -8,6 +8,7 @@ const Login = () => {
     email: "",
     password: ""
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
@@ -16,8 +17,34 @@ const Login = () => {
     })
   };
 
+  const inputValidation = () => {
+    const newErrors = {};
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!formData.email.trim()){
+      newErrors.email = "Email is required!"
+    } else if(!emailRegex.test(formData.email)) {
+      newErrors.email = "Enter a valid email!"
+    }
+
+    if(!formData.password.trim()){
+      newErrors.password = "Password is required!"
+    } else if(formData.password.length < 6){
+      newErrors.password = "Password should be of 6 characters!"
+    }
+
+    return newErrors;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newErrors = inputValidation();
+    setErrors(newErrors)
+    if(Object.keys(newErrors).length > 0){
+      return;
+    };
+
     console.log(formData);
 
 
@@ -106,6 +133,9 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email}</p>
+                )}
               </div>
             </div>
 
@@ -150,6 +180,9 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-xs">{errors.password}</p>
+                )}
 
                 <button
                   type="button"
