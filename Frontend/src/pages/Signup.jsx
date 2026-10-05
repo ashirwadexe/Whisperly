@@ -1,5 +1,6 @@
 import { useState } from "react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
+import Loader from "../components/Loader";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,7 +9,7 @@ const Signup = () => {
     email: "",
     password: ""
   });
-  const [erros, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
@@ -145,8 +146,8 @@ const Signup = () => {
                   value={formData.username}
                   onChange={handleChange}
                 />
-                {erros.username && (
-                  <p className="text-xs text-red-500">{erros.username}</p>
+                {errors.username && (
+                  <p className="text-xs text-red-500">{errors.username}</p>
                 )}
               </div>
             </div>
@@ -186,8 +187,8 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
-                {erros.email && (
-                  <p className="text-xs text-red-500">{erros.email}</p>
+                {errors.email && (
+                  <p className="text-xs text-red-500">{errors.email}</p>
                 )}
               </div>
             </div>
@@ -227,8 +228,8 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
-                {erros.password && (
-                  <p className="text-xs text-red-500">{erros.password}</p>
+                {errors.password && (
+                  <p className="text-xs text-red-500">{errors.password}</p>
                 )}
 
                 <button
