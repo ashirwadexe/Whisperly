@@ -10,7 +10,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -53,7 +53,7 @@ const Login = () => {
     }
 
     try {
-      setloading(true);
+      setLoading(true);
 
       const response = await login(formData);
       toast.success(response.message || "Login successfull!");
@@ -72,7 +72,7 @@ const Login = () => {
           "Something went wrong!",
       );
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -98,7 +98,7 @@ const Login = () => {
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div 
+        <div
           onClick={() => navigate("/")}
           className="mb-8 flex justify-center cursor-pointer"
         >
@@ -159,7 +159,6 @@ const Login = () => {
                 <p className="text-red-500 text-xs">{errors.email}</p>
               )}
             </div>
-            
 
             {/* Password */}
             <div>
@@ -248,12 +247,13 @@ const Login = () => {
           {/* Signup */}
           <p className="text-center text-sm text-zinc-500">
             Don't have an account?{" "}
-            <a
-              href="/signup"
-              className="font-semibold text-violet-600 transition hover:text-violet-700"
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className="font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer"
             >
               Create one
-            </a>
+            </button>
           </p>
         </div>
 

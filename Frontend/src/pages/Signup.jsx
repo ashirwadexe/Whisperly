@@ -62,7 +62,7 @@ const Signup = () => {
       setLoading(true);
 
       const response = await api.post("/auth/register", formData);
-      toast.success(response.message || "Acount created!");
+      toast.success(response.data.message || "Acount created!");
 
       setFormData({
         username: "",
@@ -72,6 +72,12 @@ const Signup = () => {
 
       navigate("/login");
     } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Signup failed, Try again!",
+      );
+    } finally {
       setLoading(false);
     }
   };
@@ -98,7 +104,7 @@ const Signup = () => {
       {/* Signup Content */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div 
+        <div
           onClick={() => navigate("/")}
           className="mb-8 flex justify-center cursor-pointer"
         >
@@ -264,7 +270,7 @@ const Signup = () => {
             >
               {loading ? (
                 <>
-                  <Loader text="Signing in..." />
+                  <Loader text="Creating account..." />
                 </>
               ) : (
                 <span className="relative flex items-center gap-2">
@@ -289,12 +295,13 @@ const Signup = () => {
           {/* Login */}
           <p className="text-center text-sm text-zinc-500">
             Already have an account?{" "}
-            <a
-              href="/login"
-              className="font-semibold text-violet-600 transition hover:text-violet-700"
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer"
             >
               Sign in
-            </a>
+            </button>
           </p>
         </div>
 
