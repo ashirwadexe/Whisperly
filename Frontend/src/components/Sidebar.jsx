@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   LayoutDashboard,
   MessageCircle,
@@ -12,9 +12,15 @@ import {
   Bell,
 } from "lucide-react";
 import WhisperlyLogo from "./WhisperlyLogo";
+import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [loggoingOut, setLoggingOut] = useState(false);
 
   // Temporary active navigation item.
   // Later, React Router's useLocation() can handle this.
@@ -75,6 +81,27 @@ const Sidebar = () => {
     setNotificationCount(0);
     setNotificationOpen(false);
   };
+
+  // logout function
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true);
+
+      const response = await logout();
+      toast.success(toast.response?.data?.message || "Logout successful!");
+
+      navigate("/login", {replace: true});
+
+    } catch (error) {
+      toast.error(
+        toast.response?.data?.message ||
+        toast.message ||
+        "Unable to logout. Please try again."
+      )
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <>
@@ -438,7 +465,8 @@ const Sidebar = () => {
             {/* Logout */}
             <button
               type="button"
-              onClick={() => setSidebarOpen(false)}
+              disabled={loggoingOut}
+              onClick={handleLogout}
               aria-label="Logout"
               title="Logout"
               className="
