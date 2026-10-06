@@ -110,19 +110,19 @@ const questions = [
             QUESTION RIVER
         ======================================================= */}
 
-        <div className="relative mt-14 overflow-hidden py-5">
+        <div className="relative mt-14 overflow-hidden py-2 z-1">
 
           {/* Soft fade on both edges */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white to-transparent sm:w-40" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 " />
 
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white to-transparent sm:w-40" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 " />
 
           {/* Flowing questions */}
           <div className="flex w-max animate-[questionFlow_120s_linear_infinite] gap-10">
             {[...questions, ...questions].map((question, index) => (
               <span
                 key={index}
-                className="whitespace-nowrap text-md font-medium tracking-[-0.01em] text-zinc-400 sm:text-lg"
+                className="whitespace-nowrap text-md font-medium tracking-[-0.01em] text-zinc-500 sm:text-lg"
               >
                 {question}
               </span>
