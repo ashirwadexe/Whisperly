@@ -8,7 +8,10 @@ import {
   MailOpen,
   Trash2,
   Copy,
+  Check,
 } from "lucide-react";
+
+import toast from "react-hot-toast";
 
 const MessageCard = ({
   message = "I've liked you for a really long time, but I've never had the courage to tell you.",
@@ -17,23 +20,51 @@ const MessageCard = ({
 }) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleFavourite = () => {
+    const nextValue = !isFavourite;
+
+    setIsFavourite(nextValue);
+
+    toast.success(
+      nextValue
+        ? "Added to favourites"
+        : "Removed from favourites"
+    );
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message);
+
+      setCopied(true);
+
+      toast.success("Message copied!");
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      toast.error("Unable to copy message.");
+    }
+  };
 
   return (
     <article
       className={`
-        relative overflow-hidden
+        relative
+        overflow-hidden
         rounded-2xl
-        m-3
         border
         bg-white
-        shadow-[0_4px_20px_rgba(0,0,0,0.03)]
-        transition-shadow
-        hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+        transition
         ${
           unread
-            ? "border-violet-200"
+            ? "border-violet-200 shadow-sm"
             : "border-gray-200"
         }
+        hover:shadow-sm
       `}
     >
       {/* Unread accent */}
@@ -41,32 +72,36 @@ const MessageCard = ({
         <div className="absolute left-0 top-0 h-full w-[3px] bg-violet-500" />
       )}
 
-      <div className="p-4 sm:p-5 md:p-6">
+      <div className="p-4 sm:p-5 lg:p-6">
 
-        {/* ───────────────── Header ───────────────── */}
-        <div className="flex items-start justify-between">
+        {/* ================= HEADER ================= */}
+        <div className="flex items-start justify-between gap-4">
 
-          <div className="flex items-center gap-3">
+          {/* Sender */}
+          <div className="flex min-w-0 items-center gap-3">
 
-            {/* Anonymous Avatar */}
             <div
               className="
-                flex h-11 w-11 shrink-0
+                flex h-10 w-10
+                shrink-0
                 items-center justify-center
-                rounded-[15px]
+                rounded-xl
                 border border-violet-100
                 bg-violet-50
                 text-violet-600
+                sm:h-11 sm:w-11
               "
             >
               <MessageCircle
-                size={20}
+                size={19}
                 strokeWidth={1.7}
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
+
               <div className="flex items-center gap-2">
+
                 <h3 className="text-sm font-semibold text-gray-900">
                   Anonymous
                 </h3>
@@ -78,7 +113,7 @@ const MessageCard = ({
                       bg-violet-50
                       px-2 py-0.5
                       text-[9px]
-                      font-bold
+                      font-semibold
                       uppercase
                       tracking-wider
                       text-violet-600
@@ -96,71 +131,99 @@ const MessageCard = ({
           </div>
 
           {/* More */}
-          <div className="relative">
+          <div className="relative shrink-0">
+
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
+              type="button"
+              onClick={() =>
+                setMenuOpen((prev) => !prev)
+              }
               className="
+                flex h-9 w-9
+                items-center justify-center
                 rounded-xl
-                p-2
                 text-gray-400
                 transition
-                hover:bg-gray-50
-                hover:text-gray-700
+                hover:bg-violet-50
+                hover:text-violet-600
               "
             >
-              <MoreHorizontal size={20} />
+              <MoreHorizontal size={19} />
             </button>
 
             {menuOpen && (
               <div
                 className="
-                  absolute right-0 top-11 z-20
+                  absolute right-0 top-11 z-30
                   w-44
                   rounded-2xl
-                  border border-gray-200
+                  border border-violet-100
                   bg-white
                   p-1.5
                   shadow-xl
-                  shadow-gray-200/50
+                  shadow-violet-100/40
                 "
               >
+
+                {/* Mark read */}
                 <button
+                  type="button"
                   className="
-                    flex w-full items-center gap-2.5
+                    flex w-full
+                    items-center gap-2.5
                     rounded-xl
                     px-3 py-2.5
                     text-xs font-medium
                     text-gray-600
-                    hover:bg-gray-50
+                    transition
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
                   <MailOpen size={15} />
                   Mark as read
                 </button>
 
+                {/* Copy */}
                 <button
+                  type="button"
+                  onClick={handleCopy}
                   className="
-                    flex w-full items-center gap-2.5
+                    flex w-full
+                    items-center gap-2.5
                     rounded-xl
                     px-3 py-2.5
                     text-xs font-medium
                     text-gray-600
-                    hover:bg-gray-50
+                    transition
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
-                  <Copy size={15} />
-                  Copy message
+                  {copied ? (
+                    <Check size={15} />
+                  ) : (
+                    <Copy size={15} />
+                  )}
+
+                  {copied
+                    ? "Copied"
+                    : "Copy message"}
                 </button>
 
                 <div className="my-1 h-px bg-gray-100" />
 
+                {/* Delete */}
                 <button
+                  type="button"
                   className="
-                    flex w-full items-center gap-2.5
+                    flex w-full
+                    items-center gap-2.5
                     rounded-xl
                     px-3 py-2.5
                     text-xs font-medium
                     text-red-500
+                    transition
                     hover:bg-red-50
                   "
                 >
@@ -172,26 +235,30 @@ const MessageCard = ({
           </div>
         </div>
 
-        {/* ───────────────── Message ───────────────── */}
+        {/* ================= MESSAGE ================= */}
         <div
           className="
             relative
             mt-5
             overflow-hidden
-            rounded-[20px]
-            border border-gray-100
-            bg-[#fafafa]
+            rounded-2xl
+            border border-violet-100
+            bg-violet-50/40
             px-4 py-5
             sm:px-5 sm:py-6
           "
         >
-          {/* Decorative quote */}
+
+          {/* Quote */}
           <span
             className="
-              absolute -right-2 -top-5
+              pointer-events-none
+              absolute
+              -right-1
+              -top-5
               select-none
-              text-[90px]
               font-serif
+              text-[90px]
               leading-none
               text-violet-100
             "
@@ -206,7 +273,7 @@ const MessageCard = ({
               text-[15px]
               leading-7
               text-gray-800
-              sm:text-[16px]
+              sm:text-base
               sm:leading-8
             "
           >
@@ -214,11 +281,12 @@ const MessageCard = ({
           </p>
         </div>
 
-        {/* ───────────────── Actions ───────────────── */}
+        {/* ================= ACTIONS ================= */}
         <div
           className="
             mt-4
             flex items-center
+            gap-1
             border-t border-gray-100
             pt-3
           "
@@ -226,7 +294,8 @@ const MessageCard = ({
 
           {/* Favourite */}
           <button
-            onClick={() => setIsFavourite(!isFavourite)}
+            type="button"
+            onClick={handleFavourite}
             className={`
               flex flex-1
               items-center justify-center
@@ -239,13 +308,18 @@ const MessageCard = ({
               ${
                 isFavourite
                   ? "bg-amber-50 text-amber-600"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+                  : "text-gray-500 hover:bg-violet-50 hover:text-violet-700"
               }
             `}
           >
             <Star
               size={17}
-              fill={isFavourite ? "currentColor" : "none"}
+              strokeWidth={1.8}
+              fill={
+                isFavourite
+                  ? "currentColor"
+                  : "none"
+              }
             />
 
             <span>Favourite</span>
@@ -253,6 +327,7 @@ const MessageCard = ({
 
           {/* Share */}
           <button
+            type="button"
             className="
               flex flex-1
               items-center justify-center
@@ -263,17 +338,21 @@ const MessageCard = ({
               text-gray-500
               transition
               hover:bg-violet-50
-              hover:text-violet-600
+              hover:text-violet-700
               sm:gap-2
             "
           >
-            <Share2 size={17} />
+            <Share2
+              size={17}
+              strokeWidth={1.8}
+            />
 
             <span>Share</span>
           </button>
 
           {/* Download */}
           <button
+            type="button"
             className="
               flex flex-1
               items-center justify-center
@@ -284,14 +363,21 @@ const MessageCard = ({
               text-gray-500
               transition
               hover:bg-violet-50
-              hover:text-violet-600
+              hover:text-violet-700
               sm:gap-2
             "
           >
-            <Download size={17} />
+            <Download
+              size={17}
+              strokeWidth={1.8}
+            />
 
-            <span className="whitespace-nowrap">
-              Download image
+            <span className="hidden sm:block">
+              Download
+            </span>
+
+            <span className="sm:hidden">
+              Save
             </span>
           </button>
         </div>

@@ -3,6 +3,7 @@ import {
   MessageCircle,
   MousePointerClick,
   Clock3,
+  ArrowUpRight,
 } from "lucide-react";
 
 const Stats = () => {
@@ -25,8 +26,8 @@ const Stats = () => {
   ];
 
   return (
-    <section className="px-4 pt-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
+    <section className="mb-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
 
@@ -34,43 +35,60 @@ const Stats = () => {
             <div
               key={stat.label}
               className="
+                group
                 rounded-2xl
-                border border-gray-200
+                border border-violet-100
                 bg-white
-                px-2.5 py-3.5
-                shadow-sm
-                sm:px-4 sm:py-4
-                lg:p-5 cursor-pointer
+                p-3.5
+                transition
+                hover:border-violet-200
+                hover:shadow-sm
+                sm:p-5
               "
             >
-              {/* Icon */}
-              <div
-                className="
-                  flex h-8 w-8
-                  items-center justify-center
-                  rounded-lg
-                  bg-violet-50
-                  text-violet-600
-                  sm:h-9 sm:w-9
-                  sm:rounded-xl
-                "
-              >
-                <Icon
+              {/* Top */}
+              <div className="flex items-start justify-between gap-2">
+
+                <div
+                  className="
+                    flex h-9 w-9
+                    shrink-0
+                    items-center justify-center
+                    rounded-xl
+                    bg-violet-50
+                    text-violet-600
+                    transition
+                    group-hover:bg-violet-100
+                  "
+                >
+                  <Icon
+                    size={17}
+                    strokeWidth={1.8}
+                  />
+                </div>
+
+                <ArrowUpRight
                   size={16}
-                  strokeWidth={1.9}
-                  className="sm:h-[18px] sm:w-[18px]"
+                  className="
+                    hidden
+                    text-violet-200
+                    transition
+                    group-hover:text-violet-500
+                    sm:block
+                  "
                 />
               </div>
 
               {/* Value */}
               <p
                 className="
-                  mt-3
+                  mt-4
                   truncate
-                  text-lg font-semibold
+                  text-xl
+                  font-semibold
                   tracking-tight
                   text-gray-900
-                  sm:mt-4
+                  sm:mt-5
                   sm:text-2xl
                 "
               >
@@ -80,7 +98,7 @@ const Stats = () => {
               {/* Label */}
               <p
                 className="
-                  mt-0.5
+                  mt-1
                   truncate
                   text-[10px]
                   font-medium

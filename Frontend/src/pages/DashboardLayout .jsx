@@ -1,21 +1,30 @@
-import React from 'react'
-import Sidebar from '../components/Sidebar'
-import { Outlet } from 'react-router-dom'
-import Header from '../components/Header'
-import Stats from '../components/Stats'
+import React from "react";
+import { Outlet } from "react-router-dom";
 
-const DashboardLayout  = () => {
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+
+const DashboardLayout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar/>
 
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main */}
       <main className="min-h-screen md:ml-[260px]">
-        <Header/>
-        
-        <Outlet/>
+
+        {/* Header */}
+        <Header />
+
+        {/* Page */}
+        <div className="px-4 pb-8 pt-4 sm:px-6 lg:px-8">
+          <Outlet />
+        </div>
+
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardLayout 
+export default DashboardLayout;

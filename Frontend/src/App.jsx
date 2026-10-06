@@ -9,6 +9,11 @@ import Dashboard from './pages/Dashboard'
 import NotFound404 from './pages/NotFound404'
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoutes from './components/ProtectedRoutes'
+import Messages from './pages/Messages'
+import Favourites from './pages/Favourites'
+import MyLink from './pages/MyLink'
+import { Settings } from 'lucide-react'
+import DeleteAccount from './pages/DeleteAccount'
 
 const App = () => {
   return (
@@ -19,9 +24,14 @@ const App = () => {
         <Route path='/login' element={<Login/>} />
         <Route path='/signup' element={<Signup/>} />
 
-        <Route path='dashboard' element={<DashboardLayout/>}>
-          <Route index element={<ProtectedRoutes><Dashboard/></ProtectedRoutes>} />
-          <Route path='message/:id' element={<MessageForm/>} />
+        <Route path='dashboard' element={<ProtectedRoutes><DashboardLayout/></ProtectedRoutes>}>
+        
+          <Route index element={<Dashboard/>} />
+          <Route path='messages' element={<Messages/>} />
+          <Route path='favourites' element={<Favourites/>} />
+          <Route path='my-link' element={<MyLink/>} />
+          <Route path='settings' element={<Settings/>} />
+          <Route path='delete-account' element={<DeleteAccount/>} />
 
         </Route>
       

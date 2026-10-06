@@ -1,305 +1,782 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
-  Link2,
-  Copy,
+  Bell,
   Check,
-  Share2,
+  Copy,
+  Link2,
+  Mail,
   MessageCircle,
   Send,
-  Mail,
+  Share2,
+  User,
   X,
 } from "lucide-react";
 
-const DashboardHeader = () => {
+import { AuthContext } from "../context/AuthContext";
+import api from "../api/axios";
+import toast from "react-hot-toast";
+
+const Header = () => {
+  const { user } = useContext(AuthContext);
+
+  const [notifications, setNotifications] = useState([]);
+  const [notificationOpen, setNotificationOpen] =
+    useState(false);
+  const [notificationLoading, setNotificationLoading] =
+    useState(false);
+  const [markingRead, setMarkingRead] = useState(false);
+
   const [copied, setCopied] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
 
-  const whisperlyLink = "https://whisperly.app/ashirwad";
+  const notificationRef = useRef(null);
 
+  const whisperlyLink = `https://whisperly.app/${user?.username || ""}`;
+
+  /*
+   * ============================
+   * FETCH NOTIFICATIONS
+   * ============================
+   *
+   * Change this endpoint only if
+   * your backend uses another path.
+   */
+  const fetchNotifications = async () => {
+    try {
+      setNotificationLoading(true);
+
+      const response = await api.get("/notifications");
+
+      setNotifications(
+        response.data.notifications || []
+      );
+    } catch (error) {
+      console.error(
+        "Notification fetch error:",
+        error
+      );
+    } finally {
+      setNotificationLoading(false);
+    }
+  };
+
+  /*
+   * Fetch notifications when
+   * dashboard header mounts.
+   */
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  /*
+   * Close notification/share popup
+   * when clicking outside.
+   */
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
+
+  /*
+   * ============================
+   * MARK ALL AS READ
+   * ============================
+   */
+  const handleMarkAllRead = async () => {
+    if (unreadCount === 0) return;
+
+    try {
+      setMarkingRead(true);
+
+      await api.patch("/notifications/read-all");
+
+      setNotifications((prev) =>
+        prev.map((notification) => ({
+          ...notification,
+          isRead: true,
+        }))
+      );
+
+      toast.success("All notifications marked as read.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Unable to mark notifications as read."
+      );
+    } finally {
+      setMarkingRead(false);
+    }
+  };
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead
+  ).length;
+
+  /*
+   * ============================
+   * COPY LINK
+   * ============================
+   */
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(whisperlyLink);
+      await navigator.clipboard.writeText(
+        whisperlyLink
+      );
 
       setCopied(true);
+
+      toast.success("Link copied!");
 
       setTimeout(() => {
         setCopied(false);
       }, 2000);
     } catch (error) {
-      console.error("Failed to copy link:", error);
+      toast.error("Unable to copy link.");
     }
   };
 
-  const shareText = "Send me an anonymous message on Whisperly 👀";
+  /*
+   * ============================
+   * SHARE
+   * ============================
+   */
+  const handleShare = (platform) => {
+    const encodedLink =
+      encodeURIComponent(whisperlyLink);
 
-  const shareOnWhatsApp = () => {
-    const url = `https://wa.me/?text=${encodeURIComponent(
-      `${shareText}\n${whisperlyLink}`
-    )}`;
+    const encodedText = encodeURIComponent(
+      "Send me an anonymous message on Whisperly 💜"
+    );
 
-    window.open(url, "_blank");
-    setShareOpen(false);
-  };
+    let shareUrl = "";
 
-  const shareOnTelegram = () => {
-    const url = `https://t.me/share/url?url=${encodeURIComponent(
-      whisperlyLink
-    )}&text=${encodeURIComponent(shareText)}`;
+    if (platform === "whatsapp") {
+      shareUrl =
+        `https://wa.me/?text=${encodedText}%20${encodedLink}`;
+    }
 
-    window.open(url, "_blank");
-    setShareOpen(false);
-  };
+    if (platform === "telegram") {
+      shareUrl =
+        `https://t.me/share/url?url=${encodedLink}&text=${encodedText}`;
+    }
 
-  const shareOnX = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      shareText
-    )}&url=${encodeURIComponent(whisperlyLink)}`;
+    if (platform === "x") {
+      shareUrl =
+        `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedLink}`;
+    }
 
-    window.open(url, "_blank");
-    setShareOpen(false);
-  };
+    if (platform === "email") {
+      shareUrl =
+        `mailto:?subject=Send me an anonymous message&body=${encodedText}%0A%0A${encodedLink}`;
+    }
 
-  const shareByEmail = () => {
-    const url = `mailto:?subject=${encodeURIComponent(
-      "Send me an anonymous message"
-    )}&body=${encodeURIComponent(`${shareText}\n\n${whisperlyLink}`)}`;
-
-    window.location.href = url;
-    setShareOpen(false);
+    if (shareUrl) {
+      window.open(
+        shareUrl,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
   };
 
   return (
-    <header
-      className="
-        sticky top-[68px] z-30
-        border-b border-gray-200/80
-        bg-white/95
-        backdrop-blur-xl
-        md:top-0
-      "
-    >
-      <div className="px-4 py-3 sm:px-6 lg:px-8">
-        <div className="relative mx-auto max-w-2xl">
+    <header className="border-b border-violet-100 bg-white">
 
-          {/* Main Link Container */}
-          <div
-            onClick={() => setShareOpen((prev) => !prev)}
-            className="
-              group flex cursor-pointer items-center gap-3
-              rounded-2xl border border-gray-200
-              bg-white px-3 py-2.5
-              shadow-sm
-              transition
-              hover:border-violet-200
-              hover:shadow-md
-            "
-          >
-            {/* Link Icon */}
-            <div
+      <div className="px-4 py-5 sm:px-6 lg:px-8">
+
+        {/* ================= TOP ================= */}
+        <div className="mb-5 flex items-center justify-between gap-4">
+
+          {/* Heading */}
+          <div>
+            <h1
               className="
-                flex h-10 w-10 shrink-0 items-center justify-center
-                rounded-xl bg-violet-50 text-violet-600
+                text-xl
+                font-semibold
+                tracking-tight
+                text-gray-900
+                sm:text-2xl
               "
             >
-              <Link2 size={19} strokeWidth={2} />
+              Dashboard
+            </h1>
+
+            <p
+              className="
+                mt-1
+                hidden
+                text-sm
+                text-gray-500
+                sm:block
+              "
+            >
+              Manage your anonymous messages and
+              Whisperly link.
+            </p>
+          </div>
+
+          {/* Right */}
+          <div className="flex items-center gap-2">
+
+            {/* ================= NOTIFICATION ================= */}
+            <div
+              ref={notificationRef}
+              className="relative"
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  setNotificationOpen(
+                    (prev) => !prev
+                  )
+                }
+                className="
+                  relative
+                  flex h-10 w-10
+                  items-center justify-center
+                  rounded-xl
+                  border border-violet-100
+                  bg-white
+                  text-gray-600
+                  transition
+                  hover:bg-violet-50
+                  hover:text-violet-600
+                "
+              >
+                <Bell size={18} />
+
+                {unreadCount > 0 && (
+                  <span
+                    className="
+                      absolute
+                      right-1
+                      top-1
+                      flex h-4 min-w-4
+                      items-center justify-center
+                      rounded-full
+                      bg-violet-600
+                      px-1
+                      text-[9px]
+                      font-semibold
+                      text-white
+                    "
+                  >
+                    {unreadCount > 9
+                      ? "9+"
+                      : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* ================= NOTIFICATION BOX ================= */}
+              {notificationOpen && (
+                <div
+                  className="
+                    absolute
+                    right-0
+                    top-12
+                    z-50
+                    w-[320px]
+                    overflow-hidden
+                    rounded-2xl
+                    border border-violet-100
+                    bg-white
+                    shadow-xl
+                    shadow-violet-100/40
+                  "
+                >
+                  {/* Header */}
+                  <div
+                    className="
+                      flex items-center
+                      justify-between
+                      border-b border-gray-100
+                      px-4 py-3.5
+                    "
+                  >
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900">
+                        Notifications
+                      </h3>
+
+                      <p className="mt-0.5 text-xs text-gray-400">
+                        {unreadCount > 0
+                          ? `You have ${unreadCount} unread ${
+                              unreadCount === 1
+                                ? "message"
+                                : "messages"
+                            }.`
+                          : "You're all caught up."}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNotificationOpen(false)
+                      }
+                      className="
+                        flex h-7 w-7
+                        items-center justify-center
+                        rounded-lg
+                        text-gray-400
+                        hover:bg-violet-50
+                        hover:text-violet-600
+                      "
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
+
+                  {/* Body */}
+                  <div className="max-h-[300px] overflow-y-auto">
+
+                    {notificationLoading ? (
+                      <div className="px-4 py-8 text-center">
+                        <p className="text-xs text-gray-400">
+                          Loading notifications...
+                        </p>
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="px-4 py-10 text-center">
+                        <div
+                          className="
+                            mx-auto mb-3
+                            flex h-11 w-11
+                            items-center justify-center
+                            rounded-full
+                            bg-violet-50
+                            text-violet-600
+                          "
+                        >
+                          <Bell size={19} />
+                        </div>
+
+                        <p className="text-sm font-medium text-gray-700">
+                          No notifications
+                        </p>
+
+                        <p className="mt-1 text-xs text-gray-400">
+                          New whispers will appear here.
+                        </p>
+                      </div>
+                    ) : (
+                      notifications.map(
+                        (notification) => (
+                          <div
+                            key={notification._id}
+                            className={`
+                              border-b
+                              border-gray-50
+                              px-4 py-3.5
+                              transition
+                              ${
+                                !notification.isRead
+                                  ? "bg-violet-50/50"
+                                  : "bg-white"
+                              }
+                            `}
+                          >
+                            <div className="flex gap-3">
+
+                              <div
+                                className={`
+                                  flex h-9 w-9
+                                  shrink-0
+                                  items-center
+                                  justify-center
+                                  rounded-xl
+                                  ${
+                                    !notification.isRead
+                                      ? "bg-violet-100 text-violet-600"
+                                      : "bg-gray-100 text-gray-400"
+                                  }
+                                `}
+                              >
+                                <MessageCircle
+                                  size={16}
+                                />
+                              </div>
+
+                              <div className="min-w-0">
+                                <p
+                                  className={`
+                                    text-xs leading-5
+                                    ${
+                                      !notification.isRead
+                                        ? "font-medium text-gray-800"
+                                        : "text-gray-500"
+                                    }
+                                  `}
+                                >
+                                  {notification.message ||
+                                    "You received a new anonymous message."}
+                                </p>
+
+                                {notification.createdAt && (
+                                  <p className="mt-1 text-[10px] text-gray-400">
+                                    {new Date(
+                                      notification.createdAt
+                                    ).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      )
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  {notifications.length > 0 && (
+                    <div
+                      className="
+                        border-t border-gray-100
+                        bg-white
+                        p-2
+                      "
+                    >
+                      <button
+                        type="button"
+                        onClick={handleMarkAllRead}
+                        disabled={
+                          unreadCount === 0 ||
+                          markingRead
+                        }
+                        className="
+                          flex w-full
+                          items-center
+                          justify-center
+                          gap-2
+                          rounded-xl
+                          px-3 py-2.5
+                          text-xs
+                          font-medium
+                          text-violet-600
+                          transition
+                          hover:bg-violet-50
+                          disabled:cursor-not-allowed
+                          disabled:text-gray-400
+                          disabled:hover:bg-transparent
+                        "
+                      >
+                        <Check size={15} />
+
+                        {markingRead
+                          ? "Marking as read..."
+                          : unreadCount === 0
+                          ? "All notifications read"
+                          : "Mark all as read"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ================= USER ================= */}
+            <button
+              type="button"
+              className="
+                flex items-center gap-2
+                rounded-xl
+                border border-violet-100
+                bg-white
+                px-2.5 py-2
+                transition
+                hover:bg-violet-50
+                sm:px-3
+              "
+            >
+              <div
+                className="
+                  flex h-7 w-7
+                  items-center justify-center
+                  rounded-full
+                  bg-violet-600
+                  text-xs font-semibold
+                  text-white
+                "
+              >
+                {user?.username
+                  ?.charAt(0)
+                  ?.toUpperCase() || "U"}
+              </div>
+
+              <span
+                className="
+                  hidden
+                  max-w-[120px]
+                  truncate
+                  text-sm
+                  font-medium
+                  text-gray-800
+                  sm:block
+                "
+              >
+                {user?.username || "User"}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* ================= LINK ================= */}
+        <div className="relative">
+
+          <div
+            className="
+              flex items-center gap-3
+              rounded-2xl
+              border border-violet-100
+              bg-violet-50/50
+              p-2
+              sm:p-2.5
+            "
+          >
+            {/* Icon */}
+            <div
+              className="
+                hidden h-10 w-10
+                shrink-0
+                items-center justify-center
+                rounded-xl
+                bg-white
+                text-violet-600
+                shadow-sm
+                sm:flex
+              "
+            >
+              <Link2 size={18} />
             </div>
 
             {/* Link */}
-            <div className="min-w-0 flex-1">
-              <p className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
-                Your public link
-              </p>
-
-              <p className="truncate text-sm font-medium text-gray-800">
+            <div className="min-w-0 flex-1 px-2 sm:px-0">
+              <p
+                className="
+                  truncate
+                  text-sm
+                  font-medium
+                  text-violet-900
+                "
+              >
                 {whisperlyLink}
               </p>
             </div>
 
-            {/* Share Button */}
+            {/* Copy */}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShareOpen((prev) => !prev);
-              }}
+              type="button"
+              onClick={handleCopy}
               className="
-                flex h-10 w-10 shrink-0 items-center justify-center
-                rounded-xl border border-gray-200
-                text-gray-500
+                flex h-9 w-9
+                shrink-0
+                items-center justify-center
+                rounded-xl
+                bg-white
+                text-gray-600
+                shadow-sm
                 transition
-                hover:border-violet-200
-                hover:bg-violet-50
+                hover:bg-violet-100
                 hover:text-violet-600
               "
-              title="Share your link"
-            >
-              <Share2 size={18} />
-            </button>
-
-            {/* Copy Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCopy();
-              }}
-              className={`
-                flex h-10 shrink-0 items-center justify-center gap-2
-                rounded-xl px-3
-                text-sm font-medium
-                transition
-                ${
-                  copied
-                    ? "bg-green-50 text-green-600"
-                    : "bg-gray-900 text-white hover:bg-gray-800"
-                }
-              `}
               title="Copy link"
             >
               {copied ? (
-                <>
-                  <Check size={16} />
-                  <span className="hidden sm:inline">Copied!</span>
-                </>
+                <Check size={17} />
               ) : (
-                <>
-                  <Copy size={16} />
-                  <span className="hidden sm:inline">Copy</span>
-                </>
+                <Copy size={17} />
               )}
+            </button>
+
+            {/* Share */}
+            <button
+              type="button"
+              onClick={() =>
+                setShareOpen((prev) => !prev)
+              }
+              className="
+                flex h-9
+                items-center gap-2
+                rounded-xl
+                bg-violet-600
+                px-3
+                text-sm font-medium
+                text-white
+                transition
+                hover:bg-violet-700
+              "
+            >
+              <Share2 size={16} />
+
+              <span className="hidden sm:block">
+                Share
+              </span>
             </button>
           </div>
 
-          {/* Share Apps Popup */}
+          {/* ================= SHARE POPUP ================= */}
           {shareOpen && (
             <div
-              onClick={(e) => e.stopPropagation()}
               className="
-                absolute left-0 right-0 top-[calc(100%+10px)] z-50
-                rounded-2xl border border-gray-200
-                bg-white p-3
-                shadow-xl shadow-gray-200/50
+                absolute
+                right-0
+                top-[calc(100%+10px)]
+                z-40
+                w-[280px]
+                rounded-2xl
+                border border-violet-100
+                bg-white
+                p-3
+                shadow-xl
+                shadow-violet-100/40
               "
             >
-              <div className="mb-3 flex items-center justify-between px-1">
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    Share your link
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    Let people send you anonymous messages
-                  </p>
-                </div>
+              <div className="mb-3 flex items-center justify-between px-2">
+                <p className="text-sm font-semibold text-gray-900">
+                  Share your link
+                </p>
 
                 <button
+                  type="button"
                   onClick={() => setShareOpen(false)}
                   className="
-                    rounded-lg p-1.5
+                    flex h-7 w-7
+                    items-center justify-center
+                    rounded-lg
                     text-gray-400
-                    hover:bg-gray-100
-                    hover:text-gray-700
+                    hover:bg-violet-50
+                    hover:text-violet-600
                   "
                 >
-                  <X size={16} />
+                  <X size={15} />
                 </button>
               </div>
 
-              {/* Share Apps */}
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 gap-2">
 
-                {/* WhatsApp */}
                 <button
-                  onClick={shareOnWhatsApp}
+                  type="button"
+                  onClick={() =>
+                    handleShare("whatsapp")
+                  }
                   className="
-                    flex flex-col items-center gap-1.5
-                    rounded-xl p-3
-                    text-gray-600
+                    flex items-center gap-2
+                    rounded-xl
+                    border border-gray-100
+                    px-3 py-2.5
+                    text-sm text-gray-700
                     transition
-                    hover:bg-green-50 hover:text-green-600
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50">
-                    <MessageCircle size={19} />
-                  </div>
-                  <span className="text-[11px] font-medium">
-                    WhatsApp
-                  </span>
+                  <MessageCircle size={17} />
+                  WhatsApp
                 </button>
 
-                {/* Telegram */}
                 <button
-                  onClick={shareOnTelegram}
+                  type="button"
+                  onClick={() =>
+                    handleShare("telegram")
+                  }
                   className="
-                    flex flex-col items-center gap-1.5
-                    rounded-xl p-3
-                    text-gray-600
+                    flex items-center gap-2
+                    rounded-xl
+                    border border-gray-100
+                    px-3 py-2.5
+                    text-sm text-gray-700
                     transition
-                    hover:bg-blue-50 hover:text-blue-600
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
-                    <Send size={18} />
-                  </div>
-                  <span className="text-[11px] font-medium">
-                    Telegram
-                  </span>
+                  <Send size={17} />
+                  Telegram
                 </button>
 
-                {/* X */}
                 <button
-                  onClick={shareOnX}
+                  type="button"
+                  onClick={() =>
+                    handleShare("x")
+                  }
                   className="
-                    flex flex-col items-center gap-1.5
-                    rounded-xl p-3
-                    text-gray-600
+                    flex items-center gap-2
+                    rounded-xl
+                    border border-gray-100
+                    px-3 py-2.5
+                    text-sm text-gray-700
                     transition
-                    hover:bg-gray-100 hover:text-gray-900
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-                    <X size={18} />
-                  </div>
-                  <span className="text-[11px] font-medium">
-                    X
+                  <span className="font-semibold">
+                    𝕏
                   </span>
+                  X
                 </button>
 
-                {/* Email */}
                 <button
-                  onClick={shareByEmail}
+                  type="button"
+                  onClick={() =>
+                    handleShare("email")
+                  }
                   className="
-                    flex flex-col items-center gap-1.5
-                    rounded-xl p-3
-                    text-gray-600
+                    flex items-center gap-2
+                    rounded-xl
+                    border border-gray-100
+                    px-3 py-2.5
+                    text-sm text-gray-700
                     transition
-                    hover:bg-violet-50 hover:text-violet-600
+                    hover:bg-violet-50
+                    hover:text-violet-700
                   "
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
-                    <Mail size={18} />
-                  </div>
-                  <span className="text-[11px] font-medium">
-                    Email
-                  </span>
+                  <Mail size={17} />
+                  Email
                 </button>
               </div>
 
-              {/* Copy inside share panel */}
               <button
+                type="button"
                 onClick={handleCopy}
                 className="
-                  mt-2 flex w-full items-center justify-center gap-2
-                  rounded-xl border border-gray-200
-                  px-4 py-2.5
-                  text-sm font-medium text-gray-700
+                  mt-2
+                  flex w-full
+                  items-center justify-center
+                  gap-2
+                  rounded-xl
+                  bg-violet-50
+                  px-3 py-2.5
+                  text-sm font-medium
+                  text-violet-700
                   transition
-                  hover:bg-gray-50
+                  hover:bg-violet-100
                 "
               >
                 {copied ? (
                   <>
-                    <Check size={16} className="text-green-600" />
-                    <span className="text-green-600">
-                      Link copied!
-                    </span>
+                    <Check size={16} />
+                    Copied
                   </>
                 ) : (
                   <>
@@ -311,31 +788,9 @@ const DashboardHeader = () => {
             </div>
           )}
         </div>
-
-        {/* Mobile Copy Feedback */}
-        {copied && (
-          <div
-            className="
-              fixed bottom-5 left-1/2 z-[100]
-              flex -translate-x-1/2 items-center gap-2
-              rounded-full
-              border border-green-100
-              bg-white
-              px-4 py-2.5
-              text-sm font-medium text-gray-800
-              shadow-lg shadow-gray-200/60
-            "
-          >
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-600">
-              <Check size={13} strokeWidth={2.5} />
-            </div>
-
-            Link copied!
-          </div>
-        )}
       </div>
     </header>
   );
 };
 
-export default DashboardHeader;
+export default Header;
