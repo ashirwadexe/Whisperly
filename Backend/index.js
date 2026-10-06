@@ -5,19 +5,31 @@ import { connectDB } from './src/configs/db.js';
 import userRouter from './src/routes/user.route.js';
 import messageRouter from './src/routes/message.route.js';
 import notificationRouter from './src/routes/notifications.routes.js';
+import cors from 'cors';
 
 // forcing nodejs to use google or cloudflare's dns server
 import dns from "dns";
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
+const app = express();
 
 dotenv.config();
+const PORT = process.env.PORT || 5000;
 
-const app = express();
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://localhost:5173",
+];
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true
+    })
+);
+
 app.use(cookieParser());
 app.use(express.json());
-
-const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
     res.send("Home")
