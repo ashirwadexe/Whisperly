@@ -8,6 +8,13 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const isAuthenticated = !!user;
 
+  const login = async (formData) => {
+    const response = await api.post("/auth/login", formData);
+    setUser(response.data.user);
+
+    return response.data;
+  };
+
   useEffect(() => {
     const checkAuth = async () => {
         try {
@@ -21,7 +28,6 @@ const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-
   }, []);
 
   return (
@@ -29,7 +35,8 @@ const AuthProvider = ({ children }) => {
       value={{
         user,
         loading,
-        isAuthenticated
+        isAuthenticated,
+        login,
       }}
     >
       {children}

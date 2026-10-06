@@ -1,58 +1,79 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
+import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const [loading, setloading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   };
 
   const inputValidation = () => {
     const newErrors = {};
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!formData.email.trim()){
-      newErrors.email = "Email is required!"
-    } else if(!emailRegex.test(formData.email)) {
-      newErrors.email = "Enter a valid email!"
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required!";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Enter a valid email!";
     }
 
-    if(!formData.password.trim()){
-      newErrors.password = "Password is required!"
-    } else if(formData.password.length < 6){
-      newErrors.password = "Password should be of 6 characters!"
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required!";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password should be of 6 characters!";
     }
 
     return newErrors;
-  }
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = inputValidation();
-    setErrors(newErrors)
-    if(Object.keys(newErrors).length > 0){
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
       return;
-    };
+    }
 
-    console.log(formData);
+    try {
+      setloading(true);
 
+      const response = await login(formData);
+      toast.success(response.message || "Login successfull!");
 
-    // empty the input feilds after successful form submission
-    setFormData({
-      email: "",
-      password: ""
-    });
+      // empty the input feilds after successful form submission
+      setFormData({
+        email: "",
+        password: "",
+      });
+
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong!",
+      );
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
@@ -94,10 +115,7 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {/* Email */}
             <div>
               <label
@@ -133,11 +151,12 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email}</p>
-                )}
               </div>
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
+            
 
             {/* Password */}
             <div>
@@ -180,9 +199,6 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
-                {errors.password && (
-                  <p className="text-red-500 text-xs">{errors.password}</p>
-                )}
 
                 <button
                   type="button"
@@ -193,19 +209,29 @@ const Login = () => {
                   {showPassword ? "◉" : "◌"}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
             </div>
 
             {/* Login button */}
             <button
               type="submit"
+              disabled={loading}
               className="group relative mt-2 flex w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
             >
-              <span className="relative flex items-center gap-2">
-                Sign in
-                <span className="transition-transform duration-200 group-hover:translate-x-1">
-                  →
+              {loading ? (
+                <>
+                  <Loader text="Logging in..." />
+                </>
+              ) : (
+                <span className="relative flex items-center gap-2">
+                  Sign in
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">
+                    →
+                  </span>
                 </span>
-              </span>
+              )}
             </button>
           </form>
 
