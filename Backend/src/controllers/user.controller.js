@@ -178,7 +178,7 @@ export const deleteAccount = async (req, res) => {
             });
         };
 
-        await User.findByIdAndDelete(userId);
+        await User.findByIdAndDelete(userId._id);
 
         return res.status(200).json({
             message: "Account deleted!",
