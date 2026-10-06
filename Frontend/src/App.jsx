@@ -7,17 +7,20 @@ import MessageForm from './pages/MessageForm'
 import DashboardLayout from './pages/DashboardLayout '
 import Dashboard from './pages/Dashboard'
 import NotFound404 from './pages/NotFound404'
+import { Toaster } from 'react-hot-toast'
+import ProtectedRoutes from './components/ProtectedRoutes'
 
 const App = () => {
   return (
     <>
+      <Toaster/>
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/signup' element={<Signup/>} />
 
         <Route path='dashboard' element={<DashboardLayout/>}>
-          <Route index element={<Dashboard/>} />
+          <Route index element={<ProtectedRoutes><Dashboard/></ProtectedRoutes>} />
           <Route path='message/:id' element={<MessageForm/>} />
 
         </Route>
