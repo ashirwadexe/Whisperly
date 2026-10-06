@@ -88,7 +88,7 @@ const Sidebar = () => {
       setLoggingOut(true);
 
       const response = await logout();
-      toast.success(toast.response?.data?.message || "Logout successful!");
+      toast.success(response.message || "Logout successful!");
 
       navigate("/login", {replace: true});
 

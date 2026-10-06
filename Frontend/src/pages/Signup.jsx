@@ -1,71 +1,80 @@
 import { useState } from "react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   };
 
   const inputValidation = () => {
     // everytime userwill submit previous errors will became zero and new one's will be added in it
     const newErrors = {};
 
-    if(!formData.username.trim()){
-      newErrors.username = "Username is required!"
-    } 
-    else if(formData.username.length < 3){
-      newErrors.username = "Username should be of 3 characters!"
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required!";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username should be of 3 characters!";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!formData.email.trim()){
-      newErrors.email = "Email is required"
-    }
-    else if(!emailRegex.test(formData.email)){
-      newErrors.email = "Enter a valid email!"
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Enter a valid email!";
     }
 
-    if(!formData.password.trim()){
-      newErrors.password = "Password is required!"
-    }
-    else if(formData.password.length < 6){
-      newErrors.password = "Password should be of 6 characters!"
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required!";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password should be of 6 characters!";
     }
 
     return newErrors;
-  }
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const newErrors = inputValidation();
     setErrors(newErrors);
-    if(Object.keys(newErrors).length > 0){
+    if (Object.keys(newErrors).length > 0) {
       return;
-    };
-    
-    console.log(formData);
+    }
 
+    try {
+      setLoading(true);
 
-    // empty the input fields after successful form submission
-    setFormData({
-      username: "",
-      email: "",
-      password: ""
-    });
-  }
+      const response = await api.post("/auth/register", formData);
+      toast.success(response.message || "Acount created!");
+
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+      });
+
+      navigate("/login");
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6 py-12">
@@ -89,7 +98,10 @@ const Signup = () => {
       {/* Signup Content */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 flex justify-center">
+        <div 
+          onClick={() => navigate("/")}
+          className="mb-8 flex justify-center cursor-pointer"
+        >
           <WhisperlyLogo />
         </div>
 
@@ -107,10 +119,7 @@ const Signup = () => {
           </div>
 
           {/* Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {/* Name */}
             <div>
               <label
@@ -146,10 +155,10 @@ const Signup = () => {
                   value={formData.username}
                   onChange={handleChange}
                 />
-                {errors.username && (
-                  <p className="text-xs text-red-500">{errors.username}</p>
-                )}
               </div>
+              {errors.username && (
+                <p className="text-xs text-red-500">{errors.username}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -187,10 +196,10 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
-                {errors.email && (
-                  <p className="text-xs text-red-500">{errors.email}</p>
-                )}
               </div>
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -228,10 +237,6 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                 />
-                {errors.password && (
-                  <p className="text-xs text-red-500">{errors.password}</p>
-                )}
-
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -241,6 +246,9 @@ const Signup = () => {
                   {showPassword ? "◉" : "◌"}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-red-500">{errors.password}</p>
+              )}
             </div>
 
             {/* Terms */}
@@ -251,14 +259,21 @@ const Signup = () => {
             {/* Signup button */}
             <button
               type="submit"
+              disabled={loading}
               className="group relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
             >
-              <span className="relative flex items-center gap-2">
-                Create account
-                <span className="transition-transform duration-200 group-hover:translate-x-1">
-                  →
+              {loading ? (
+                <>
+                  <Loader text="Signing in..." />
+                </>
+              ) : (
+                <span className="relative flex items-center gap-2">
+                  Create account
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">
+                    →
+                  </span>
                 </span>
-              </span>
+              )}
             </button>
           </form>
 

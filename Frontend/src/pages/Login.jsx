@@ -64,7 +64,7 @@ const Login = () => {
         password: "",
       });
 
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
@@ -98,7 +98,10 @@ const Login = () => {
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 flex justify-center">
+        <div 
+          onClick={() => navigate("/")}
+          className="mb-8 flex justify-center cursor-pointer"
+        >
           <WhisperlyLogo />
         </div>
 
