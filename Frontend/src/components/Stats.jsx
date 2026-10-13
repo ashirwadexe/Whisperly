@@ -1,29 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MessageCircle,
   MousePointerClick,
   Clock3,
   ArrowUpRight,
 } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const Stats = () => {
+
+  const [statsData, setStatsData] = useState({
+    totalMessages: 0,
+    messagesToday: 0,
+    totalLinkVisits: 0
+  });
+
+  useEffect(() => {
+    const dashboardStats = async () => {
+      try {
+        const response = await api.get("/messages/stats");
+        setStatsData(response.data.stats);
+      } catch (error) {
+        toast.error(
+          error.response?.data?.message ||
+          error.message ||
+          "Error loading dashboard stats!"
+        )
+      }
+    };
+
+    dashboardStats();
+  },[]);
+
   const stats = [
     {
       label: "Total Whispers",
-      value: "128",
+      value: statsData.totalMessages,
       icon: MessageCircle,
     },
     {
       label: "Link Visits",
-      value: "1,284",
+      value: statsData.totalLinkVisits,
       icon: MousePointerClick,
     },
     {
       label: "Today",
-      value: "12",
+      value: statsData.messagesToday,
       icon: Clock3,
     },
   ];
+
 
   return (
     <section className="mb-6">
