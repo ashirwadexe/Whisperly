@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react";
 import {
   Bell,
@@ -5,6 +6,7 @@ import {
   Copy,
   Link2,
   Mail,
+  MessageCircle,
   Send,
   Share2,
   User,
@@ -12,23 +14,19 @@ import {
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
-import NotificationDialog from "./NotificationDialog";
-const Header = () => {
+
+const Header = ({ notificationCount = 0, onNotificationClick }) => {
   const { user } = useContext(AuthContext);
-  // UI-only demo count. Connect this to your notification API when you handle the backend.
-  const [unreadCount, setUnreadCount] = useState(3);
-  const [notificationOpen, setNotificationOpen] = useState(false);
+
   const [copied, setCopied] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+
   const username = user?.username;
+
   const whisperlyLink = username
     ? `${window.location.origin}/${username}`
     : "";
-  // UI-only interaction: clicking the notification message clears the badge.
-  const handleNotificationClick = () => {
-    setUnreadCount(0);
-    setNotificationOpen(false);
-  };
+
   /*
    * ============================
    * COPY LINK
@@ -39,6 +37,7 @@ const Header = () => {
       await navigator.clipboard.writeText(whisperlyLink);
       setCopied(true);
       toast.success("Link copied!");
+
       setTimeout(() => {
         setCopied(false);
       }, 2000);
@@ -46,6 +45,7 @@ const Header = () => {
       toast.error("Unable to copy link.");
     }
   };
+
   /*
    * ============================
    * SHARE
@@ -61,20 +61,25 @@ const Header = () => {
     const encodedText = encodeURIComponent(
       "Send me an anonymous message on Whisperly 💜",
     );
+
     let shareUrl = "";
 
     if (platform === "whatsapp") {
       shareUrl = `https://wa.me/?text=${encodedText}%20${encodedLink}`;
     }
+
     if (platform === "telegram") {
       shareUrl = `https://t.me/share/url?url=${encodedLink}&text=${encodedText}`;
     }
+
     if (platform === "x") {
       shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedLink}`;
     }
+
     if (platform === "facebook") {
       shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`;
     }
+
     if (platform === "email") {
       shareUrl = `mailto:?subject=Send me an anonymous message&body=${encodedText}%0A%0A${encodedLink}`;
     }
@@ -98,6 +103,7 @@ const Header = () => {
           text: "Send me an anonymous message on Whisperly 💜",
           url: whisperlyLink,
         });
+
         setShareOpen(false);
       } catch (error) {
         if (error.name !== "AbortError") {
@@ -108,6 +114,7 @@ const Header = () => {
       handleCopy();
     }
   };
+
   return (
     <header className="border-b border-violet-100 bg-white">
       <div className="px-4 py-5 sm:px-6 lg:px-8">
@@ -126,6 +133,7 @@ const Header = () => {
             >
               Dashboard
             </h1>
+
             <p
               className="
                 mt-1
@@ -138,22 +146,25 @@ const Header = () => {
               Manage your anonymous messages and Whisperly link.
             </p>
           </div>
+
           {/* Right */}
           <div className="flex items-center gap-2">
             {/* ================= NOTIFICATION ================= */}
             <button
               type="button"
               aria-label="Open notifications"
-              onClick={() => setNotificationOpen(true)}
+              onClick={onNotificationClick}
               className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-violet-100 bg-white text-gray-600 transition hover:bg-violet-50 hover:text-violet-600"
             >
               <Bell size={18} />
-              {unreadCount > 0 && (
+
+              {notificationCount > 0 && (
                 <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-violet-600 px-1 text-[9px] font-semibold text-white">
-                  {unreadCount > 9 ? "9+" : unreadCount}
+                  {notificationCount > 9 ? "9+" : notificationCount}
                 </span>
               )}
             </button>
+
             {/* ================= USER ================= */}
             <button
               type="button"
@@ -180,6 +191,7 @@ const Header = () => {
               >
                 {user?.username?.charAt(0)?.toUpperCase() || "U"}
               </div>
+
               <span
                 className="
                   hidden
@@ -196,6 +208,7 @@ const Header = () => {
             </button>
           </div>
         </div>
+
         {/* ================= LINK ================= */}
         <div className="relative">
           <div
@@ -223,6 +236,7 @@ const Header = () => {
             >
               <Link2 size={18} />
             </div>
+
             {/* Link */}
             <div className="min-w-0 flex-1 px-2 sm:px-0">
               <p
@@ -236,6 +250,7 @@ const Header = () => {
                 {whisperlyLink}
               </p>
             </div>
+
             {/* Copy */}
             <button
               type="button"
@@ -256,6 +271,7 @@ const Header = () => {
             >
               {copied ? <Check size={17} /> : <Copy size={17} />}
             </button>
+
             {/* Share */}
             <button
               type="button"
@@ -276,13 +292,6 @@ const Header = () => {
               <span className="hidden sm:block">Share</span>
             </button>
           </div>
-          {/* ================= REUSABLE NOTIFICATION DIALOG ================= */}
-          <NotificationDialog
-            isOpen={notificationOpen}
-            unreadCount={unreadCount}
-            onClose={() => setNotificationOpen(false)}
-            onMarkAllRead={handleNotificationClick}
-          />
 
           {/* ================= SHARE DIALOG ================= */}
           {shareOpen && (
@@ -305,9 +314,14 @@ const Header = () => {
                     <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
                       <Share2 size={21} />
                     </div>
-                    <h2 id="share-dialog-title" className="text-lg font-semibold text-gray-900">
+
+                    <h2
+                      id="share-dialog-title"
+                      className="text-lg font-semibold text-gray-900"
+                    >
                       Share your Whisperly link
                     </h2>
+
                     <p className="mt-1 text-sm text-gray-500">
                       Let people send you anonymous messages.
                     </p>
@@ -323,9 +337,13 @@ const Header = () => {
                   </button>
                 </div>
 
-                <label htmlFor="whisperly-share-link" className="mb-2 block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="whisperly-share-link"
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
                   Your personal link
                 </label>
+
                 <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-2">
                   <input
                     id="whisperly-share-link"
@@ -335,6 +353,7 @@ const Header = () => {
                     placeholder="Your link is loading..."
                     className="min-w-0 flex-1 bg-transparent px-2 text-sm text-gray-700 outline-none"
                   />
+
                   <button
                     type="button"
                     onClick={handleCopy}
@@ -358,7 +377,9 @@ const Header = () => {
 
                 <div className="my-5 flex items-center gap-3">
                   <div className="h-px flex-1 bg-gray-100" />
-                  <span className="text-[11px] font-medium tracking-wide text-gray-400">OR SHARE VIA</span>
+                  <span className="text-[11px] font-medium tracking-wide text-gray-400">
+                    OR SHARE VIA
+                  </span>
                   <div className="h-px flex-1 bg-gray-100" />
                 </div>
 
@@ -371,7 +392,9 @@ const Header = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-50 text-green-600">
                       <MessageCircle size={18} />
                     </span>
-                    <span className="text-sm font-medium text-gray-700">WhatsApp</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      WhatsApp
+                    </span>
                   </button>
 
                   <button
@@ -382,7 +405,9 @@ const Header = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
                       <Send size={18} />
                     </span>
-                    <span className="text-sm font-medium text-gray-700">Telegram</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Telegram
+                    </span>
                   </button>
 
                   <button
@@ -393,7 +418,9 @@ const Header = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                       <span className="text-lg font-bold">f</span>
                     </span>
-                    <span className="text-sm font-medium text-gray-700">Facebook</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Facebook
+                    </span>
                   </button>
 
                   <button
@@ -404,7 +431,9 @@ const Header = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-800">
                       <span className="text-sm font-bold">𝕏</span>
                     </span>
-                    <span className="text-sm font-medium text-gray-700">X</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      X
+                    </span>
                   </button>
 
                   <button
@@ -415,7 +444,9 @@ const Header = () => {
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
                       <Mail size={18} />
                     </span>
-                    <span className="text-sm font-medium text-gray-700">Email</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Email
+                    </span>
                   </button>
                 </div>
 
@@ -430,4 +461,5 @@ const Header = () => {
     </header>
   );
 };
+
 export default Header;

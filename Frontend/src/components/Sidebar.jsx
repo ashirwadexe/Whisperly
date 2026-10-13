@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react";
 
 import {
@@ -18,22 +19,16 @@ import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import Loader from "./Loader";
 import WhisperlyLogo from "./WhisperlyLogo";
-import NotificationDialog from "./NotificationDialog";
 
-const Sidebar = () => {
+const Sidebar = ({
+  notificationCount = 0,
+  onNotificationClick,
+}) => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-
-  // Temporary UI-only unread count. Connect your notification API later.
-  const [notificationCount, setNotificationCount] = useState(3);
-
-  const handleMarkAllNotificationsRead = () => {
-    setNotificationCount(0);
-    setNotificationOpen(false);
-  };
 
   const mainMenu = [
     {
@@ -113,9 +108,8 @@ const Sidebar = () => {
 
           <button
             type="button"
-            onClick={() => setNotificationOpen(true)}
+            onClick={onNotificationClick}
             aria-label="Open notifications"
-            aria-expanded={notificationOpen}
             className="relative flex h-10 w-10 touch-manipulation items-center justify-center rounded-xl text-gray-600 transition hover:bg-violet-50 hover:text-violet-600"
           >
             <Bell size={19} />
@@ -365,9 +359,8 @@ const Sidebar = () => {
 
           <button
             type="button"
-            onClick={() => setNotificationOpen(true)}
+            onClick={onNotificationClick}
             aria-label="Open notifications"
-            aria-expanded={notificationOpen}
             className="
 
               mb-3 hidden w-full touch-manipulation
@@ -452,11 +445,7 @@ const Sidebar = () => {
 
               "
             >
-              {user?.username
-
-                ?.charAt(0)
-
-                ?.toUpperCase() || "U"}
+              {user?.username?.charAt(0)?.toUpperCase() || "U"}
             </div>
 
             <div className="min-w-0 flex-1">
@@ -500,13 +489,6 @@ const Sidebar = () => {
           </div>
         </div>
       </aside>
-
-      <NotificationDialog
-        isOpen={notificationOpen}
-        unreadCount={notificationCount}
-        onClose={() => setNotificationOpen(false)}
-        onMarkAllRead={handleMarkAllNotificationsRead}
-      />
     </>
   );
 };
