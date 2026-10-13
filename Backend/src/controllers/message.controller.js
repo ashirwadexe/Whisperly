@@ -184,11 +184,11 @@ export const getFavouriteMessages = async (req, res) => {
 //GET: /api/messages/stats
 export const messageStats = async (req, res) => {
     try {
-        const userId = req.user;
+        const userId = req.user._id;
 
         // total messages received be a user
         const totalMessages = await Message.countDocuments({
-            user: userId._id
+            user: userId
         });
 
         // start of today
