@@ -225,23 +225,28 @@ export const deleteAccount = async (req, res) => {
 export const openMessageLink = async (req, res) => {
   try {
     const { username } = req.params;
-    const user = await User.findOne({ username });
+    const user = await User.findOneAndUpdate(
+      {username},
+      {$inc : { linkVisits: 1}},
+      {
+        returnDocument: "After",
+        projection: "username linkVisits"
+      }
+    );
 
     if (!user) {
       return res.status(404).json({
         message: "User not found!",
         success: false,
       });
-    }
-
-    // count this link visit by anonymous user
-    user.linkVisits += 1;
-    await user.save();
+    };
 
     return res.status(200).json({
       success: true,
+      message: "Link visit count successfull!",
       user: {
         username: user.username,
+        linkVisits: user.linkVisits
       },
     });
   } catch (error) {
