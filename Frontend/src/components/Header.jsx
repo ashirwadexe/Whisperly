@@ -1,105 +1,34 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Bell,
   Check,
   Copy,
   Link2,
   Mail,
-  MessageCircle,
   Send,
   Share2,
   User,
   X,
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
-import api from "../api/axios";
 import toast from "react-hot-toast";
+import NotificationDialog from "./NotificationDialog";
 const Header = () => {
   const { user } = useContext(AuthContext);
-  const [notifications, setNotifications] = useState([]);
+  // UI-only demo count. Connect this to your notification API when you handle the backend.
+  const [unreadCount, setUnreadCount] = useState(3);
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notificationLoading, setNotificationLoading] = useState(false);
-  const [markingRead, setMarkingRead] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const notificationRef = useRef(null);
   const username = user?.username;
   const whisperlyLink = username
     ? `${window.location.origin}/${username}`
     : "";
-  /*
-   * ============================
-   * FETCH NOTIFICATIONS
-   * ============================
-   *
-   * Change this endpoint only if
-   * your backend uses another path.
-   */
-  const fetchNotifications = async () => {
-    try {
-      setNotificationLoading(true);
-      const response = await api.get("/notifications");
-      setNotifications(response.data.notifications || []);
-    } catch (error) {
-      console.error("Notification fetch error:", error);
-    } finally {
-      setNotificationLoading(false);
-    }
+  // UI-only interaction: clicking the notification message clears the badge.
+  const handleNotificationClick = () => {
+    setUnreadCount(0);
+    setNotificationOpen(false);
   };
-  /*
-   * Fetch notifications when
-   * dashboard header mounts.
-   */
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-  /*
-   * Close notification/share popup
-   * when clicking outside.
-   */
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target)
-      ) {
-        setNotificationOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-  /*
-   * ============================
-   * MARK ALL AS READ
-   * ============================
-   */
-  const handleMarkAllRead = async () => {
-    if (unreadCount === 0) return;
-    try {
-      setMarkingRead(true);
-      await api.patch("/notifications/read-all");
-      setNotifications((prev) =>
-        prev.map((notification) => ({
-          ...notification,
-          isRead: true,
-        })),
-      );
-      toast.success("All notifications marked as read.");
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Unable to mark notifications as read.",
-      );
-    } finally {
-      setMarkingRead(false);
-    }
-  };
-  const unreadCount = notifications.filter(
-    (notification) => !notification.isRead,
-  ).length;
   /*
    * ============================
    * COPY LINK
@@ -212,228 +141,19 @@ const Header = () => {
           {/* Right */}
           <div className="flex items-center gap-2">
             {/* ================= NOTIFICATION ================= */}
-            <div ref={notificationRef} className="relative">
-              <button
-                type="button"
-                onClick={() => setNotificationOpen((prev) => !prev)}
-                className="
-                  relative
-                  flex h-10 w-10
-                  items-center justify-center
-                  rounded-xl
-                  border border-violet-100
-                  bg-white
-                  text-gray-600
-                  transition
-                  hover:bg-violet-50
-                  hover:text-violet-600
-                "
-              >
-                <Bell size={18} />
-                {unreadCount > 0 && (
-                  <span
-                    className="
-                      absolute
-                      right-1
-                      top-1
-                      flex h-4 min-w-4
-                      items-center justify-center
-                      rounded-full
-                      bg-violet-600
-                      px-1
-                      text-[9px]
-                      font-semibold
-                      text-white
-                    "
-                  >
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
-              {/* ================= NOTIFICATION BOX ================= */}
-              {notificationOpen && (
-                <div
-                  className="
-                    absolute
-                    right-0
-                    top-12
-                    z-50
-                    w-[320px]
-                    overflow-hidden
-                    rounded-2xl
-                    border border-violet-100
-                    bg-white
-                    shadow-xl
-                    shadow-violet-100/40
-                  "
-                >
-                  {/* Header */}
-                  <div
-                    className="
-                      flex items-center
-                      justify-between
-                      border-b border-gray-100
-                      px-4 py-3.5
-                    "
-                  >
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-900">
-                        Notifications
-                      </h3>
-                      <p className="mt-0.5 text-xs text-gray-400">
-                        {unreadCount > 0
-                          ? `You have ${unreadCount} unread ${
-                              unreadCount === 1 ? "message" : "messages"
-                            }.`
-                          : "You're all caught up."}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setNotificationOpen(false)}
-                      className="
-                        flex h-7 w-7
-                        items-center justify-center
-                        rounded-lg
-                        text-gray-400
-                        hover:bg-violet-50
-                        hover:text-violet-600
-                      "
-                    >
-                      <X size={15} />
-                    </button>
-                  </div>
-                  {/* Body */}
-                  <div className="max-h-[300px] overflow-y-auto">
-                    {notificationLoading ? (
-                      <div className="px-4 py-8 text-center">
-                        <p className="text-xs text-gray-400">
-                          Loading notifications...
-                        </p>
-                      </div>
-                    ) : notifications.length === 0 ? (
-                      <div className="px-4 py-10 text-center">
-                        <div
-                          className="
-                            mx-auto mb-3
-                            flex h-11 w-11
-                            items-center justify-center
-                            rounded-full
-                            bg-violet-50
-                            text-violet-600
-                          "
-                        >
-                          <Bell size={19} />
-                        </div>
-                        <p className="text-sm font-medium text-gray-700">
-                          No notifications
-                        </p>
-                        <p className="mt-1 text-xs text-gray-400">
-                          New whispers will appear here.
-                        </p>
-                      </div>
-                    ) : (
-                      notifications.map((notification) => (
-                        <div
-                          key={notification._id}
-                          className={`
-                              border-b
-                              border-gray-50
-                              px-4 py-3.5
-                              transition
-                              ${
-                                !notification.isRead
-                                  ? "bg-violet-50/50"
-                                  : "bg-white"
-                              }
-                            `}
-                        >
-                          <div className="flex gap-3">
-                            <div
-                              className={`
-                                  flex h-9 w-9
-                                  shrink-0
-                                  items-center
-                                  justify-center
-                                  rounded-xl
-                                  ${
-                                    !notification.isRead
-                                      ? "bg-violet-100 text-violet-600"
-                                      : "bg-gray-100 text-gray-400"
-                                  }
-                                `}
-                            >
-                              <MessageCircle size={16} />
-                            </div>
-                            <div className="min-w-0">
-                              <p
-                                className={`
-                                    text-xs leading-5
-                                    ${
-                                      !notification.isRead
-                                        ? "font-medium text-gray-800"
-                                        : "text-gray-500"
-                                    }
-                                  `}
-                              >
-                                {notification.message ||
-                                  "You received a new anonymous message."}
-                              </p>
-                              {notification.createdAt && (
-                                <p className="mt-1 text-[10px] text-gray-400">
-                                  {new Date(
-                                    notification.createdAt,
-                                  ).toLocaleString()}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                  {/* Footer */}
-                  {notifications.length > 0 && (
-                    <div
-                      className="
-                        border-t border-gray-100
-                        bg-white
-                        p-2
-                      "
-                    >
-                      <button
-                        type="button"
-                        onClick={handleMarkAllRead}
-                        disabled={unreadCount === 0 || markingRead}
-                        className="
-                          flex w-full
-                          items-center
-                          justify-center
-                          gap-2
-                          rounded-xl
-                          px-3 py-2.5
-                          text-xs
-                          font-medium
-                          text-violet-600
-                          transition
-                          hover:bg-violet-50
-                          disabled:cursor-not-allowed
-                          disabled:text-gray-400
-                          disabled:hover:bg-transparent
-                        "
-                      >
-                        <Check size={15} />
-                        {markingRead
-                          ? "Marking as read..."
-                          : unreadCount === 0
-                            ? "All notifications read"
-                            : "Mark all as read"}
-                      </button>
-                    </div>
-                  )}
-                </div>
+            <button
+              type="button"
+              aria-label="Open notifications"
+              onClick={() => setNotificationOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-violet-100 bg-white text-gray-600 transition hover:bg-violet-50 hover:text-violet-600"
+            >
+              <Bell size={18} />
+              {unreadCount > 0 && (
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-violet-600 px-1 text-[9px] font-semibold text-white">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
               )}
-            </div>
+            </button>
             {/* ================= USER ================= */}
             <button
               type="button"
@@ -556,6 +276,14 @@ const Header = () => {
               <span className="hidden sm:block">Share</span>
             </button>
           </div>
+          {/* ================= REUSABLE NOTIFICATION DIALOG ================= */}
+          <NotificationDialog
+            isOpen={notificationOpen}
+            unreadCount={unreadCount}
+            onClose={() => setNotificationOpen(false)}
+            onMarkAllRead={handleNotificationClick}
+          />
+
           {/* ================= SHARE DIALOG ================= */}
           {shareOpen && (
             <div
