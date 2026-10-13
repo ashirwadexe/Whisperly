@@ -61,7 +61,7 @@ export const message = async (req, res) => {
 export const getMessages = async (req, res) => {
     try {
         const userId = req.user._id;
-        const messages = await Message.find({user: userId});
+        const messages = await Message.find({user: userId}).sort({ createdAt: -1});
         return res.status(200).json({
             message: "Messages retrieved successfully",
             success: true,
