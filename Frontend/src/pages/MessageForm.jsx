@@ -13,6 +13,7 @@ import WhisperlyLogo from "../components/WhisperlyLogo";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
+import { useEffect } from "react";
 
 const MessageForm = () => {
   const { username} = useParams();
@@ -21,6 +22,20 @@ const MessageForm = () => {
   const [isloading, setIsLoading] = useState(false);
 
   const maxLength = 500;
+
+  useEffect(() => {
+    const countLinkVisits = async () => {
+      if(!username) return;
+      try {
+        await api.get(`/auth/${username}`);
+      } catch (error) {
+        toast.error("Unable to load this link!");
+      }
+    };
+
+    countLinkVisits();
+    
+  },[username])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

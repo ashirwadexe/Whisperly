@@ -122,7 +122,7 @@ const NotificationDialog = ({
 
         <div className="border-t border-gray-100 bg-gray-50/70 px-5 py-3">
           <p className="text-center text-[11px] leading-5 text-gray-400">
-            Notification actions are UI-only here; connect your backend logic separately.
+            Notification are updated here everytime you refresh or visit the app.
           </p>
         </div>
       </div>
