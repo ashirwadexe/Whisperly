@@ -60,7 +60,8 @@ export const message = async (req, res) => {
 //GET: /api/messages/
 export const getMessages = async (req, res) => {
     try {
-        const messages = await Message.find();
+        const userId = req.user._id;
+        const messages = await Message.find({user: userId});
         return res.status(200).json({
             message: "Messages retrieved successfully",
             success: true,

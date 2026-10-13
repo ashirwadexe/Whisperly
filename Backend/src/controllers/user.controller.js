@@ -1,228 +1,253 @@
+import Message from "../models/message.model.js";
+import Notification from "../models/notification.model.js";
 import User from "../models/user.model.js";
-import { userLoginValidator, userRegisterValidator } from "../validators/user.validator.js";
+import {
+  userLoginValidator,
+  userRegisterValidator,
+} from "../validators/user.validator.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // register
 // POST: /api/auth/register
 export const register = async (req, res) => {
-    try {
-        // validating user data using zod
-        const result = userRegisterValidator.safeParse(req.body);
-        if(!result.success) {
-            return res.status(400).json({
-                message: "Validation failed!",
-                success: false,
-                error: result.error.flatten()
-            });
-        };
+  try {
+    // validating user data using zod
+    const result = userRegisterValidator.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        message: "Validation failed!",
+        success: false,
+        error: result.error.flatten(),
+      });
+    }
 
-        // validated user data
-        const { username, email, password } = result.data;
+    // validated user data
+    const { username, email, password } = result.data;
 
-        // check username unique or not
-        const usernameExist = await User.findOne({ username});
-        if(usernameExist) {
-            return res.status(400).json({
-                message: "Username already exist, try another!",
-                success: false
-            });
-        };
+    // check username unique or not
+    const usernameExist = await User.findOne({ username });
+    if (usernameExist) {
+      return res.status(400).json({
+        message: "Username already exist, try another!",
+        success: false,
+      });
+    }
 
-        // check email exist or not
-        const emailExist = await User.findOne({ email });
-        if(emailExist) {
-            return res.status(400).json({
-                message: "Email already exist, try another!",
-                success: false
-            });
-        };
+    // check email exist or not
+    const emailExist = await User.findOne({ email });
+    if (emailExist) {
+      return res.status(400).json({
+        message: "Email already exist, try another!",
+        success: false,
+      });
+    }
 
-        // hash password to store in db
-        const hashedPassword = await bcrypt.hash(password, 10);
+    // hash password to store in db
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        // create user account in db
-        const user = await User.create({
-            username,
-            email,
-            password: hashedPassword
-        });
+    // create user account in db
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
-        return res.status(200).json({
-            message: "Account created!",
-            success: true,
-            user: {
-                _id: user._id,
-                username: user.username,
-                email: user.email
-            }
-        });
-
-
-    } catch (error) {
-        console.log("Registeration error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
-    };
+    return res.status(200).json({
+      message: "Account created!",
+      success: true,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.log("Registeration error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // login
 // POST: /api/auth/login
 export const login = async (req, res) => {
-    try {
-        const result = userLoginValidator.safeParse(req.body);
-        if(!result.success) {
-            return res.status(400).json({
-                message: "Validation failed - Login",
-                success: false,
-                error: result.error.flatten()
-            });
-        };
+  try {
+    const result = userLoginValidator.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        message: "Validation failed - Login",
+        success: false,
+        error: result.error.flatten(),
+      });
+    }
 
-        const { email, password } = result.data;
+    const { email, password } = result.data;
 
-        // check user exist or not
-        let user = await User.findOne({ email });
-        if(!user) {
-            return res.status(404).json({
-                message: "Email not found!",
-                success: false
-            });
-        };
+    // check user exist or not
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "Email not found!",
+        success: false,
+      });
+    }
 
-        // compare password
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if(!isPasswordCorrect){
-            return res.status(401).json({
-                message: "Wrong Password",
-                success: false
-            });
-        };
+    // compare password
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        message: "Wrong Password",
+        success: false,
+      });
+    }
 
-        // create token
-        const tokenData = {
-            userId: user._id
-        };
-
-        const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: "7d"});
-
-        user = {
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-        };
-
-        return res.status(200).cookie("token", token, {maxAge: 7*24*60*60*1000, httpOnly: true, sameSite:'strict'}).json({
-            message: `Welcome, ${user.username}!`,
-            success: true,
-            user
-        });
-
-    } catch (error) {
-        console.log("Login error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
+    // create token
+    const tokenData = {
+      userId: user._id,
     };
+
+    const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    user = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+
+    return res
+      .status(200)
+      .cookie("token", token, {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: "strict",
+      })
+      .json({
+        message: `Welcome, ${user.username}!`,
+        success: true,
+        user,
+      });
+  } catch (error) {
+    console.log("Login error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // logout
 // GET: /api/auth/logout
 export const logout = async (req, res) => {
-    try {
-        return res.status(200).cookie("token", "", {maxAge: 0, httpOnly: true, sameSite: "strict"}).json({
-            message: "Logged out!",
-            success: true
-        });
-    } catch (error) {
-        console.log("Logout error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
-    };
+  try {
+    return res
+      .status(200)
+      .cookie("token", "", { maxAge: 0, httpOnly: true, sameSite: "strict" })
+      .json({
+        message: "Logged out!",
+        success: true,
+      });
+  } catch (error) {
+    console.log("Logout error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // userProfile
 // GET: /api/auth/profile
 export const userProfile = async (req, res) => {
-    try {
-        const { _id, username, email } = req.user;
+  try {
+    const { _id, username, email } = req.user;
 
-        return res.status(200).json({
-            success: true,
-            user: {
-                id: _id,
-                username,
-                email
-            }
-        });
-
-    } catch (error) {
-        console.log("Profile error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
-    };
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: _id,
+        username,
+        email,
+      },
+    });
+  } catch (error) {
+    console.log("Profile error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // delete
 // DELETE: /api/auth/delete
 export const deleteAccount = async (req, res) => {
-    try {
-        const userId = req.user;
-        if(!userId) {
-            return res.status(401).json({
-                message: "Account not exist!",
-                success: false
-            });
-        };
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({
+        message: "Please login first.",
+        success: false,
+      });
+    }
 
-        await User.findByIdAndDelete(userId._id);
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(401).json({
+        message: "Account not exist!",
+        success: false,
+      });
+    }
 
-        return res.status(200).json({
-            message: "Account deleted!",
-            success: true
-        });
+    await Message.deleteMany({ user: userId });
+    await Notification.deleteMany({ user: userId });
+    await User.findByIdAndDelete(userId);
 
+    // clearing user cookies(token)
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "strict",
+    });
 
-    } catch (error) {
-        console.log("deleteAccount error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
-    };
+    return res.status(200).json({
+      message: "Account deleted!",
+      success: true,
+    });
+  } catch (error) {
+    console.log("deleteAccount error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // TOTAL LINK VISITS
 // GET: /api/auth/:username
 export const openMessageLink = async (req, res) => {
-    try {
-        const { username } = req.params;
-        const user = await User.findOne({username});
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
 
-        if(!user) {
-            return res.status(404).json({
-                message: "User not found!",
-                success: false
-            });
-        };
-
-        // count this link visit by anonymous user
-        user.linkVisits += 1;
-        await user.save();
-
-        return res.status(200).json({
-            success: true,
-            user: {
-                username: user.username
-            }
-        });
-
-    } catch (error) {
-        console.log("open message link error: ", error);
-        return res.status(500).json({
-            message: error.message
-        });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+        success: false,
+      });
     }
-}
+
+    // count this link visit by anonymous user
+    user.linkVisits += 1;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    console.log("open message link error: ", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
