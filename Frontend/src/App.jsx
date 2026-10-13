@@ -35,7 +35,7 @@ const App = () => {
 
         </Route>
       
-        <Route path='/message/:username' element={<MessageForm/>} />
+        <Route path='/:username' element={<MessageForm/>} />
         <Route path='*' element={<NotFound404/>} />
       </Routes>
     </>

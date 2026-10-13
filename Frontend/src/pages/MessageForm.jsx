@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   ArrowUpRight,
   Check,
@@ -7,22 +7,43 @@ import {
   MessageCircle,
   Send,
   Sparkles,
+  User,
 } from "lucide-react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
+import api from "../api/axios";
+import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 const MessageForm = () => {
+  const { username} = useParams();
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
 
   const maxLength = 500;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!message.trim()) return;
 
-    // API call will come here later
-    setSubmitted(true);
+    try {
+      setIsLoading(true);
+      const response = await api.post(`/messages/${username}`, 
+        { message: message.trim() }
+      );
+
+      toast.success(response.data.message || "Message sent!");
+      setSubmitted(true);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Error sending message. Try again!",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -63,13 +84,12 @@ const MessageForm = () => {
             {/* Owner profile */}
             <div className="mb-6 text-center">
               <span className="mt-4 flex items-center justify-center gap-2">
-                <h1 className="text-lg font-semibold tracking-tight text-gray-900">
-                  Ashirwad
-                </h1>
-
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-100 text-violet-600">
-                  <Check size={12} strokeWidth={3} />
+                  <User size={15} strokeWidth={3} />
                 </span>
+                <h1 className="text-lg font-semibold tracking-tight text-gray-900">
+                  {username}
+                </h1>
               </span>
 
               <p className="mt-1 text-sm text-gray-500">
@@ -138,10 +158,14 @@ const MessageForm = () => {
                     {/* Submit */}
                     <button
                       type="submit"
-                      disabled={!message.trim()}
+                      disabled={!message.trim() || isloading}
                       className="group mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-200/50 transition hover:shadow-xl hover:shadow-violet-200/60 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      <span>Send anonymously</span>
+                      {!isloading ? (
+                        <span>Send anonymously</span>
+                      ) : (
+                        <Loader text="Submitting..." />
+                      )}
 
                       <Send
                         size={16}
