@@ -1,6 +1,9 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Hero = () => {
+  const { user } = useContext(AuthContext);
   const questions = [
     "I've liked you for a really long time, but I've never had the courage to tell you.",
     "Tumse ek baat kehni thi... I actually miss talking to you.",
@@ -91,32 +94,50 @@ const Hero = () => {
           </p>
 
           {/* CTA */}
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              to="login"
-              className="group flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-xl transition-all duration-200 hover:-translate-y-1"
-              style={{
-                backgroundColor: "#064E3B",
-                boxShadow: "0 12px 24px rgba(6, 78, 59, 0.12)",
-              }}
-            >
-              Create Your Whisperly
-              <span className="transition-transform duration-200 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
+          {!user ? (
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                to="/login"
+                className="group flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-xl transition-all duration-200 hover:-translate-y-1"
+                style={{
+                  backgroundColor: "#064E3B",
+                  boxShadow: "0 12px 24px rgba(6, 78, 59, 0.12)",
+                }}
+              >
+                Create Your Whisperly
+                <span className="transition-transform duration-200 group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
 
-            <Link
-              to="/signup"
-              className="rounded-xl border bg-white px-6 py-3.5 text-sm font-semibold shadow-sm transition hover:-translate-y-1"
-              style={{
-                borderColor: "#F8E7C9",
-                color: "#064E3B",
-              }}
-            >
-              See How It Works
-            </Link>
-          </div>
+              <Link
+                to="/signup"
+                className="rounded-xl border bg-white px-6 py-3.5 text-sm font-semibold shadow-sm transition hover:-translate-y-1"
+                style={{
+                  borderColor: "#F8E7C9",
+                  color: "#064E3B",
+                }}
+              >
+                See How It Works
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-9 flex justify-center">
+              <Link
+                to="/dashboard"
+                className="group flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-xl transition-all duration-200 hover:-translate-y-1"
+                style={{
+                  backgroundColor: "#064E3B",
+                  boxShadow: "0 12px 24px rgba(6, 78, 59, 0.12)",
+                }}
+              >
+                Whisperly Dashboard
+                <span className="transition-transform duration-200 group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
+            </div>
+          )}
 
           {/* Trust Text */}
           <div className="mt-5 flex items-center justify-center gap-2 text-xs text-zinc-400">
