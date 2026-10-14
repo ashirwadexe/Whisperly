@@ -9,8 +9,10 @@ import {
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import usePageTitle from "../hooks/usePageTitle";
 
 const MyLink = () => {
+  usePageTitle("My Link");
   const { user } = useContext(AuthContext);
   const [copied, setCopied] = useState(false);
 

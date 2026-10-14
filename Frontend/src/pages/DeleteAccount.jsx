@@ -5,8 +5,10 @@ import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
+import usePageTitle from "../hooks/usePageTitle";
 
 const DeleteAccount = () => {
+  usePageTitle("Delete Account");
   const [showDialog, setShowDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 

@@ -10,8 +10,10 @@ import toast from "react-hot-toast";
 
 import api from "../api/axios";
 import MessageCard from "../components/MessageCard";
+import usePageTitle from "../hooks/usePageTitle";
 
 const Favourites = () => {
+  usePageTitle("Favourites")
   const [favouriteMessages, setFavouriteMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 

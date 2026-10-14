@@ -12,8 +12,10 @@ import {
   ArrowDown,
   Sparkles,
 } from "lucide-react";
+import usePageTitle from "../hooks/usePageTitle";
 
 const Dashboard = () => {
+  usePageTitle("Dashboard")
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);

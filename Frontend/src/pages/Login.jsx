@@ -4,8 +4,10 @@ import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import usePageTitle from "../hooks/usePageTitle";
 
 const Login = () => {
+  usePageTitle("Login")
   const { login } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});

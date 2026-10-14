@@ -10,8 +10,10 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import usePageTitle from "../hooks/usePageTitle";
 
 const Settings = () => {
+  usePageTitle("Settings");
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
