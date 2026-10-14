@@ -1,9 +1,11 @@
+
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Hero = () => {
   const { user } = useContext(AuthContext);
+
   const questions = [
     "I've liked you for a really long time, but I've never had the courage to tell you.",
     "Tumse ek baat kehni thi... I actually miss talking to you.",
@@ -28,44 +30,31 @@ const Hero = () => {
   ];
 
   return (
-    <section className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-white pt-15">
+    <section className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-[#FDFBF5] pt-15 text-[#173D32]">
       {/* Background */}
-      <div
-        className="absolute inset-0 opacity-50"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, #064E3B 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute inset-0 opacity-[0.32]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #8FA99A 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
 
-      <div className="absolute left-1/2 top-[-180px] h-[450px] w-[700px] -translate-x-1/2 rounded-full blur-3xl"
-        style={{ backgroundColor: "#F8E7C9", opacity: 0.7 }}
-      />
+        <div className="absolute left-1/2 top-[-180px] h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-[#DCE9D8]/70 blur-3xl" />
 
-      <div className="absolute -left-32 top-1/2 h-72 w-72 rounded-full blur-3xl"
-        style={{ backgroundColor: "#F8E7C9", opacity: 0.55 }}
-      />
+        <div className="absolute -left-32 top-1/2 h-72 w-72 rounded-full bg-[#F8E7C9]/80 blur-3xl" />
 
-      <div className="absolute -right-32 top-1/3 h-72 w-72 rounded-full blur-3xl"
-        style={{ backgroundColor: "#064E3B", opacity: 0.08 }}
-      />
+        <div className="absolute -right-32 top-1/3 h-72 w-72 rounded-full bg-[#DCE9D8]/70 blur-3xl" />
+      </div>
 
       {/* Main Content */}
-      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-20 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-5 pb-24 pt-16 sm:px-6 sm:pt-20 lg:px-8">
+        {/* Badge */}
         <div className="flex justify-center">
-          <div
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium shadow-sm"
-            style={{
-              borderColor: "#F8E7C9",
-              backgroundColor: "#F8E7C9",
-              color: "#064E3B",
-            }}
-          >
-            <span
-              className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white"
-              style={{ backgroundColor: "#064E3B" }}
-            >
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-[#173D32] bg-[#F8E7C9] px-4 py-2 text-xs font-bold text-[#064E3B] shadow-[3px_3px_0_#173D32] sm:text-sm">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#064E3B] text-[10px] text-[#F8E7C9]">
               ✦
             </span>
             Anonymous conversations, made simple
@@ -73,21 +62,15 @@ const Hero = () => {
         </div>
 
         {/* Hero Heading */}
-        <div className="mx-auto mt-7 max-w-4xl text-center">
-          <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl">
+        <div className="mx-auto mt-8 max-w-4xl text-center">
+          <h1 className="text-4xl font-black leading-[1.08] tracking-[-0.055em] text-[#173D32] sm:text-6xl lg:text-7xl">
             Let people say what they
-            <span
-              className="block bg-clip-text text-transparent"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, #064E3B, #0B6B50, #064E3B)",
-              }}
-            >
+            <span className="mt-1 block text-[#0B6B50]">
               can't say openly.
             </span>
           </h1>
 
-          <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg">
+          <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[#65766B] sm:text-lg">
             Whisperly is an anonymous messaging platform where you can
             create your personal link, share it with anyone, and receive
             honest messages without knowing who sent them.
@@ -95,14 +78,10 @@ const Hero = () => {
 
           {/* CTA */}
           {!user ? (
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 to="/login"
-                className="group flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-xl transition-all duration-200 hover:-translate-y-1"
-                style={{
-                  backgroundColor: "#064E3B",
-                  boxShadow: "0 12px 24px rgba(6, 78, 59, 0.12)",
-                }}
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#173D32] bg-[#064E3B] px-6 py-3.5 text-sm font-bold text-white shadow-[5px_5px_0_#173D32] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#173D32] active:translate-y-0 active:shadow-none sm:w-auto"
               >
                 Create Your Whisperly
                 <span className="transition-transform duration-200 group-hover:translate-x-1">
@@ -112,11 +91,7 @@ const Hero = () => {
 
               <Link
                 to="/signup"
-                className="rounded-xl border bg-white px-6 py-3.5 text-sm font-semibold shadow-sm transition hover:-translate-y-1"
-                style={{
-                  borderColor: "#F8E7C9",
-                  color: "#064E3B",
-                }}
+                className="flex w-full items-center justify-center rounded-2xl border-2 border-[#173D32] bg-white px-6 py-3.5 text-sm font-bold text-[#173D32] shadow-[5px_5px_0_#DCE9D8] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#F8E7C9] hover:shadow-[6px_6px_0_#DCE9D8] active:translate-y-0 active:shadow-none sm:w-auto"
               >
                 See How It Works
               </Link>
@@ -125,11 +100,7 @@ const Hero = () => {
             <div className="mt-9 flex justify-center">
               <Link
                 to="/dashboard"
-                className="group flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-xl transition-all duration-200 hover:-translate-y-1"
-                style={{
-                  backgroundColor: "#064E3B",
-                  boxShadow: "0 12px 24px rgba(6, 78, 59, 0.12)",
-                }}
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#173D32] bg-[#064E3B] px-6 py-3.5 text-sm font-bold text-white shadow-[5px_5px_0_#173D32] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#173D32] active:translate-y-0 active:shadow-none sm:w-auto"
               >
                 Whisperly Dashboard
                 <span className="transition-transform duration-200 group-hover:translate-x-1">
@@ -140,25 +111,22 @@ const Hero = () => {
           )}
 
           {/* Trust Text */}
-          <div className="mt-5 flex items-center justify-center gap-2 text-xs text-zinc-400">
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: "#064E3B" }}
-            />
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-[#718276]">
+            <span className="h-2 w-2 rounded-full bg-[#0B6B50]" />
             No identity revealed to the receiver
           </div>
         </div>
 
         {/* Question River */}
-        <div className="relative z-1 mt-14 overflow-hidden py-2">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20" />
+        <div className="relative z-[1] mt-14 overflow-hidden border-y border-[#DCE5D8] py-4">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#FDFBF5] to-transparent sm:w-28" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#FDFBF5] to-transparent sm:w-28" />
 
           <div className="flex w-max animate-[questionFlow_120s_linear_infinite] gap-10">
             {[...questions, ...questions].map((question, index) => (
               <span
                 key={index}
-                className="whitespace-nowrap text-md font-medium tracking-[-0.01em] text-zinc-500 sm:text-lg"
+                className="whitespace-nowrap text-sm font-semibold tracking-[-0.01em] text-[#65766B] sm:text-base"
               >
                 {question}
               </span>
@@ -180,180 +148,158 @@ const Hero = () => {
         </div>
 
         {/* Visual Section */}
-        <div className="relative mx-auto mt-12 max-w-5xl">
-          <div
-            className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border"
-            style={{ borderColor: "#F8E7C9" }}
-          />
+        <div className="relative mx-auto mt-16 max-w-5xl">
+          <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#DCE5D8] sm:border-2" />
 
-          <div
-            className="absolute left-1/2 top-1/2 h-[650px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full border"
-            style={{ borderColor: "#F8E7C9", opacity: 0.6 }}
-          />
+          <div className="absolute left-1/2 top-1/2 h-[650px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#E8E0CC]/70" />
 
           {/* Floating Message - Left */}
-          <div className="absolute -left-2 top-10 z-20 hidden w-64 rotate-[-5deg] rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl shadow-zinc-900/5 sm:block lg:left-4">
+          <div className="absolute -left-2 top-10 z-20 hidden w-64 -rotate-[5deg] rounded-2xl border-2 border-[#173D32] bg-white p-4 shadow-[5px_5px_0_#DCE9D8] sm:block lg:left-4">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-9 w-9 items-center justify-center rounded-full"
-                style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-              >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9] font-bold text-[#064E3B]">
                 ?
               </div>
 
               <div>
-                <p className="text-xs font-semibold text-zinc-800">Anonymous</p>
-                <p className="text-[11px] text-zinc-400">Just now</p>
+                <p className="text-xs font-bold text-[#173D32]">Anonymous</p>
+                <p className="text-[11px] text-[#829187]">Just now</p>
               </div>
             </div>
 
-            <p className="mt-3 text-sm leading-5 text-zinc-600">
+            <p className="mt-3 text-sm leading-5 text-[#52675B]">
               "What's something you've always wanted to tell me?"
             </p>
           </div>
 
           {/* Floating Message - Right */}
-          <div className="absolute -right-2 top-28 z-20 hidden w-64 rotate-[5deg] rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl shadow-zinc-900/5 sm:block lg:right-4">
+          <div className="absolute -right-2 top-28 z-20 hidden w-64 rotate-[5deg] rounded-2xl border-2 border-[#173D32] bg-white p-4 shadow-[5px_5px_0_#F8E7C9] sm:block lg:right-4">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-9 w-9 items-center justify-center rounded-full"
-                style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-              >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9] font-bold text-[#064E3B]">
                 ♥
               </div>
 
               <div>
-                <p className="text-xs font-semibold text-zinc-800">Anonymous</p>
-                <p className="text-[11px] text-zinc-400">2 min ago</p>
+                <p className="text-xs font-bold text-[#173D32]">Anonymous</p>
+                <p className="text-[11px] text-[#829187]">2 min ago</p>
               </div>
             </div>
 
-            <p className="mt-3 text-sm leading-5 text-zinc-600">
+            <p className="mt-3 text-sm leading-5 text-[#52675B]">
               "Your content has helped me more than you know."
             </p>
           </div>
 
           {/* Main App Mockup */}
           <div className="relative mx-auto max-w-3xl">
-            <div
-              className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl"
-              style={{ boxShadow: "0 25px 60px rgba(6, 78, 59, 0.10)" }}
-            >
+            <div className="overflow-hidden rounded-3xl border-2 border-[#173D32] bg-white shadow-[8px_8px_0_#DCE9D8] sm:shadow-[12px_12px_0_#DCE9D8]">
               {/* Top Bar */}
-              <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
+              <div className="flex items-center justify-between border-b-2 border-[#E7EAE2] bg-white px-4 py-4 sm:px-5">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-300" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-green-300" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#D99A87]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#D7B45C]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#6CA889]" />
                   </div>
                 </div>
 
-                <div className="hidden rounded-lg bg-zinc-50 px-4 py-1.5 text-xs text-zinc-400 sm:block">
+                <div className="hidden rounded-lg border border-[#E4E9E0] bg-[#FDFBF5] px-4 py-1.5 text-xs font-medium text-[#718276] sm:block">
                   whisperly.app/ashirwad
                 </div>
 
-                <div
-                  className="h-7 w-7 rounded-full"
-                  style={{ backgroundColor: "#F8E7C9" }}
-                />
+                <div className="h-8 w-8 rounded-xl border border-[#173D32] bg-[#F8E7C9]" />
               </div>
 
               {/* Dashboard */}
-              <div className="grid gap-6 p-6 md:grid-cols-[180px_1fr]"
-                style={{ backgroundColor: "#FCF9F3" }}
+              <div
+                className="grid gap-6 p-4 sm:p-6 md:grid-cols-[180px_1fr]"
+                style={{ backgroundColor: "#FDFBF5" }}
               >
                 {/* Sidebar */}
                 <div className="hidden space-y-2 md:block">
                   <div className="mb-5 flex items-center gap-2 px-2">
-                    <div
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
-                      style={{ backgroundColor: "#064E3B", color: "#F8E7C9" }}
-                    >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#173D32] bg-[#064E3B] text-sm font-black text-[#F8E7C9]">
                       W
                     </div>
 
-                    <span className="font-semibold text-zinc-800">Whisperly</span>
+                    <span className="font-black tracking-tight text-[#173D32]">
+                      Whisperly
+                    </span>
                   </div>
 
-                  <div
-                    className="rounded-lg px-3 py-2 text-xs font-medium"
-                    style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-                  >
+                  <div className="rounded-xl border-2 border-[#173D32] bg-[#F8E7C9] px-3 py-2.5 text-xs font-bold text-[#064E3B] shadow-[3px_3px_0_#173D32]">
                     Messages
                   </div>
 
-                  <div className="px-3 py-2 text-xs text-zinc-400">My Profile</div>
-                  <div className="px-3 py-2 text-xs text-zinc-400">Settings</div>
+                  <div className="rounded-xl px-3 py-2.5 text-xs font-medium text-[#829187]">
+                    My Profile
+                  </div>
+
+                  <div className="rounded-xl px-3 py-2.5 text-xs font-medium text-[#829187]">
+                    Settings
+                  </div>
                 </div>
 
                 {/* Main Dashboard */}
-                <div>
-                  <div className="flex items-center justify-between">
+                <div className="min-w-0">
+                  <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs text-zinc-400">Your inbox</p>
-                      <h3 className="mt-1 text-xl font-bold text-zinc-900">
+                      <p className="text-xs font-medium text-[#829187]">
+                        Your inbox
+                      </p>
+                      <h3 className="mt-1 text-lg font-black tracking-tight text-[#173D32] sm:text-xl">
                         Anonymous Messages
                       </h3>
                     </div>
 
-                    <div
-                      className="rounded-lg bg-white px-3 py-2 text-xs font-medium shadow-sm"
-                      style={{ color: "#064E3B" }}
-                    >
+                    <div className="shrink-0 rounded-xl border-2 border-[#173D32] bg-[#F8E7C9] px-2.5 py-2 text-[10px] font-bold text-[#064E3B] sm:px-3 sm:text-xs">
                       12 messages
                     </div>
                   </div>
 
                   {/* Messages */}
                   <div className="mt-5 space-y-3">
-                    <div className="rounded-2xl border border-zinc-100 bg-white p-4 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#173D32] bg-white p-3.5 shadow-[3px_3px_0_#DCE9D8] sm:p-4">
                       <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-8 w-8 items-center justify-center rounded-full text-xs"
-                          style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-                        >
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9] text-xs font-bold text-[#064E3B]">
                           ?
                         </div>
 
                         <div>
-                          <p className="text-xs font-semibold text-zinc-700">
+                          <p className="text-xs font-bold text-[#173D32]">
                             Anonymous
                           </p>
-                          <p className="text-[10px] text-zinc-400">2 minutes ago</p>
+                          <p className="text-[10px] text-[#829187]">
+                            2 minutes ago
+                          </p>
                         </div>
 
-                        <span
-                          className="ml-auto rounded-full px-2 py-1 text-[9px] font-medium"
-                          style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-                        >
+                        <span className="ml-auto rounded-full border border-[#B9D6C1] bg-[#EDF5EA] px-2 py-1 text-[9px] font-bold text-[#064E3B]">
                           New
                         </span>
                       </div>
 
-                      <p className="mt-3 text-sm text-zinc-600">
+                      <p className="mt-3 text-sm leading-6 text-[#52675B]">
                         "You seem like someone who is really easy to talk to."
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-zinc-100 bg-white p-4 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#173D32] bg-white p-3.5 shadow-[3px_3px_0_#F8E7C9] sm:p-4">
                       <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-8 w-8 items-center justify-center rounded-full text-xs"
-                          style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-                        >
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9] text-xs font-bold text-[#064E3B]">
                           ♥
                         </div>
 
                         <div>
-                          <p className="text-xs font-semibold text-zinc-700">
+                          <p className="text-xs font-bold text-[#173D32]">
                             Anonymous
                           </p>
-                          <p className="text-[10px] text-zinc-400">14 minutes ago</p>
+                          <p className="text-[10px] text-[#829187]">
+                            14 minutes ago
+                          </p>
                         </div>
                       </div>
 
-                      <p className="mt-3 text-sm text-zinc-600">
+                      <p className="mt-3 text-sm leading-6 text-[#52675B]">
                         "I have something I've wanted to tell you for a while..."
                       </p>
                     </div>
@@ -363,26 +309,24 @@ const Hero = () => {
             </div>
 
             {/* Share Link */}
-            <div className="absolute -bottom-7 left-1/2 flex w-[90%] -translate-x-1/2 items-center justify-between rounded-2xl border border-zinc-200 bg-white p-3 shadow-xl shadow-zinc-900/10 sm:w-auto sm:min-w-[390px]">
-              <div className="flex items-center gap-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-                >
+            <div className="absolute -bottom-7 left-1/2 flex w-[94%] -translate-x-1/2 items-center justify-between gap-2 rounded-2xl border-2 border-[#173D32] bg-white p-3 shadow-[5px_5px_0_#173D32] sm:w-auto sm:min-w-[390px] sm:gap-4">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9] text-lg text-[#064E3B]">
                   🔗
                 </div>
 
-                <div>
-                  <p className="text-[10px] text-zinc-400">Your Whisperly link</p>
-                  <p className="text-xs font-semibold text-zinc-700">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-medium text-[#829187]">
+                    Your Whisperly link
+                  </p>
+                  <p className="truncate text-xs font-bold text-[#173D32]">
                     whisperly.app/yourname
                   </p>
                 </div>
               </div>
 
               <button
-                className="rounded-lg px-3 py-2 text-[10px] font-semibold text-white"
-                style={{ backgroundColor: "#064E3B" }}
+                className="shrink-0 rounded-xl border-2 border-[#173D32] bg-[#064E3B] px-3 py-2 text-[10px] font-bold text-white shadow-[2px_2px_0_#173D32]"
               >
                 Copy
               </button>
@@ -390,21 +334,16 @@ const Hero = () => {
           </div>
 
           {/* Privacy Badge */}
-          <div className="absolute -bottom-8 -right-2 hidden items-center gap-2 rounded-xl border bg-white px-4 py-3 shadow-lg sm:flex lg:right-10"
-            style={{ borderColor: "#F8E7C9", boxShadow: "0 10px 25px rgba(6, 78, 59, 0.08)" }}
-          >
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: "#F8E7C9", color: "#064E3B" }}
-            >
+          <div className="absolute -bottom-8 -right-2 hidden items-center gap-2 rounded-2xl border-2 border-[#173D32] bg-white px-4 py-3 shadow-[5px_5px_0_#F8E7C9] sm:flex lg:right-10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173D32] bg-[#F8E7C9]">
               🔒
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-zinc-800">
+              <p className="text-xs font-bold text-[#173D32]">
                 Identity protected
               </p>
-              <p className="text-[10px] text-zinc-400">
+              <p className="text-[10px] text-[#829187]">
                 Sender stays anonymous
               </p>
             </div>

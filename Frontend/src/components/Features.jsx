@@ -1,178 +1,161 @@
+import { Link } from "react-router-dom";
 const Features = () => {
+  const features = [
+    "Message controls",
+    "Privacy",
+  ];
+
+  const cardClass =
+    "group relative overflow-hidden rounded-[24px] border-2 border-[#173D32] bg-[#FDFBF5] shadow-[5px_5px_0px_#173D32] transition-all duration-300 hover:-translate-y-1 hover:shadow-[7px_7px_0px_#173D32] sm:rounded-[28px]";
+
+  const iconClass =
+    "flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#173D32] bg-[#F8E7C9] text-xl shadow-[2px_2px_0px_#173D32]";
+
+  const labelClass =
+    "mt-5 text-xs font-extrabold uppercase tracking-[0.15em] text-[#0B6B50]";
+
+  const headingClass =
+    "mt-2 text-xl font-extrabold tracking-tight text-[#173D32]";
+
+  const descriptionClass =
+    "mt-2 text-sm leading-6 text-[#65766B]";
+
+  const mockupClass =
+    "relative overflow-hidden bg-[#F5F3E9]";
+
+  const miniCardClass =
+    "rounded-2xl border-2 border-[#D8E2D6] bg-white p-4 shadow-[3px_3px_0px_#E4E8DC]";
+
   return (
     <section
       id="features"
-      className="relative overflow-hidden bg-white py-20"
+      className="relative overflow-hidden bg-[#FDFBF5] py-20 sm:py-24"
     >
-      {/* Background */}
+      {/* BACKGROUND DECORATION */}
       <div
-        className="absolute inset-0 opacity-40"
+        className="pointer-events-none absolute inset-0 opacity-25"
         style={{
           backgroundImage:
-            "radial-gradient(circle, #064E3B 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+            "radial-gradient(circle, #0B6B50 1px, transparent 1px)",
+          backgroundSize: "26px 26px",
         }}
       />
 
       <div
-        className="absolute left-1/2 top-20 h-[500px] w-[700px] -translate-x-1/2 rounded-full blur-3xl"
-        style={{ backgroundColor: "#F8E7C9", opacity: 0.65 }}
+        className="pointer-events-none absolute left-1/2 top-20 h-[500px] w-[700px] -translate-x-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: "#F8E7C9", opacity: 0.5 }}
       />
 
       <div
-        className="absolute -left-40 top-[45%] h-80 w-80 rounded-full blur-3xl"
-        style={{ backgroundColor: "#F8E7C9", opacity: 0.45 }}
+        className="pointer-events-none absolute -left-40 top-[45%] h-80 w-80 rounded-full blur-3xl"
+        style={{ backgroundColor: "#F8E7C9", opacity: 0.4 }}
       />
 
       <div
-        className="absolute -right-40 bottom-20 h-80 w-80 rounded-full blur-3xl"
-        style={{ backgroundColor: "#064E3B", opacity: 0.06 }}
+        className="pointer-events-none absolute -right-40 bottom-20 h-80 w-80 rounded-full blur-3xl"
+        style={{ backgroundColor: "#0B6B50", opacity: 0.07 }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header */}
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        {/* HEADER */}
         <div className="mx-auto max-w-2xl text-center">
-          <div
-            className="mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold"
-            style={{
-              borderColor: "#F8E7C9",
-              backgroundColor: "#F8E7C9",
-              color: "#064E3B",
-            }}
-          >
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: "#064E3B" }}
-            />
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-[#173D32] bg-[#F8E7C9] px-4 py-2 text-xs font-bold text-[#064E3B] shadow-[2px_2px_0px_#173D32]">
+            <span className="h-2 w-2 rounded-full bg-[#0B6B50]" />
             Everything you need
           </div>
 
-          <h2 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+          <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-[#173D32] sm:text-4xl lg:text-5xl">
             Designed for
-            <span
-              className="block bg-clip-text text-transparent"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, #064E3B, #0B6B50, #064E3B)",
-              }}
-            >
+            <span className="mt-1 block text-[#0B6B50]">
               honest conversations.
             </span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-zinc-500 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-[#65766B] sm:text-base">
             Whisperly gives you a simple space to receive anonymous messages,
             manage your inbox, and keep your conversations under your control.
           </p>
         </div>
 
-        {/* Feature Grid */}
-        <div className="mt-20 grid gap-6 lg:grid-cols-3">
-          {/* Feature 1: Anonymous Messages */}
-          <div
-            className="group relative overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-xl shadow-zinc-900/[0.04] transition duration-300 hover:-translate-y-2 hover:shadow-2xl lg:col-span-2"
-            style={{ "--tw-shadow-color": "rgba(6,78,59,0.12)" }}
-          >
+        {/* FEATURE GRID */}
+        <div className="mt-16 grid gap-7 sm:mt-20 lg:grid-cols-3 lg:gap-6">
+          {/* FEATURE 1: ANONYMOUS MESSAGES */}
+          <div className={`${cardClass} lg:col-span-2`}>
             <div
-              className="absolute -right-24 -top-24 h-56 w-56 rounded-full blur-3xl"
+              className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full blur-3xl"
               style={{ backgroundColor: "#F8E7C9", opacity: 0.8 }}
             />
 
-            <div className="grid h-full md:grid-cols-2">
-              <div className="relative flex flex-col justify-center p-7 sm:p-9">
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                  style={{ backgroundColor: "#F8E7C9" }}
-                >
-                  💬
-                </div>
+            <div className="relative grid h-full md:grid-cols-2">
+              <div className="relative flex flex-col justify-center p-6 sm:p-9">
+                <div className={iconClass}>💬</div>
 
-                <p
-                  className="mt-5 text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: "#064E3B" }}
-                >
-                  Core feature
-                </p>
+                <p className={labelClass}>Core feature</p>
 
-                <h3 className="mt-2 text-2xl font-bold tracking-tight text-zinc-900">
+                <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#173D32]">
                   Truly anonymous messages
                 </h3>
 
-                <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-500">
+                <p className="mt-3 max-w-sm text-sm leading-6 text-[#65766B]">
                   Give people a comfortable way to say what's on their mind
                   without putting their identity in the conversation.
                 </p>
 
-                <div className="mt-6 flex items-center gap-2 text-xs font-medium text-zinc-500">
-                  <span
-                    className="flex h-5 w-5 items-center justify-center rounded-full"
-                    style={{
-                      backgroundColor: "#F8E7C9",
-                      color: "#064E3B",
-                    }}
-                  >
+                <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#36594A]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#173D32] bg-[#F8E7C9] text-[#064E3B]">
                     ✓
                   </span>
                   Sender identity stays hidden
                 </div>
               </div>
 
+              {/* MESSAGE PREVIEW */}
               <div
-                className="relative flex min-h-[300px] items-center justify-center overflow-hidden p-6"
-                style={{ backgroundColor: "#FCF9F3" }}
+                className={`${mockupClass} flex min-h-[300px] items-center justify-center border-t-2 border-[#D8E2D6] p-5 md:border-l-2 md:border-t-0 sm:p-6`}
               >
-                <div
-                  className="absolute h-64 w-64 rounded-full border"
-                  style={{ borderColor: "#F8E7C9" }}
-                />
+                <div className="absolute h-64 w-64 rounded-full border-2 border-[#D8E2D6]" />
 
-                <div className="relative w-full max-w-[270px] space-y-3">
-                  <div className="translate-x-2 rounded-2xl border border-zinc-100 bg-white p-4 shadow-lg shadow-zinc-900/5 transition duration-300 group-hover:-translate-x-1">
+                <div className="relative w-full max-w-[270px] space-y-4">
+                  <div className={`${miniCardClass} translate-x-2 transition-transform duration-300 group-hover:-translate-x-1`}>
                     <div className="flex items-center gap-2">
-                      <div
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-xs"
-                        style={{
-                          backgroundColor: "#F8E7C9",
-                          color: "#064E3B",
-                        }}
-                      >
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#173D32] bg-[#F8E7C9] text-xs text-[#064E3B]">
                         ?
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-semibold text-zinc-700">
+                        <p className="text-[10px] font-extrabold text-[#173D32]">
                           Anonymous
                         </p>
-                        <p className="text-[9px] text-zinc-400">Just now</p>
+                        <p className="text-[9px] text-[#829187]">
+                          Just now
+                        </p>
                       </div>
+
+                      <span className="ml-auto h-2 w-2 rounded-full bg-[#0B6B50]" />
                     </div>
 
-                    <p className="mt-3 text-xs leading-5 text-zinc-500">
+                    <p className="mt-3 text-xs leading-5 text-[#65766B]">
                       "What's something you've always wanted to tell me?"
                     </p>
                   </div>
 
-                  <div className="-translate-x-2 rounded-2xl border border-zinc-100 bg-white p-4 shadow-lg shadow-zinc-900/5">
+                  <div className={`${miniCardClass} -translate-x-2`}>
                     <div className="flex items-center gap-2">
-                      <div
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-xs"
-                        style={{
-                          backgroundColor: "#F8E7C9",
-                          color: "#064E3B",
-                        }}
-                      >
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#173D32] bg-[#F8E7C9] text-xs text-[#064E3B]">
                         ♥
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-semibold text-zinc-700">
+                        <p className="text-[10px] font-extrabold text-[#173D32]">
                           Anonymous
                         </p>
-                        <p className="text-[9px] text-zinc-400">2 min ago</p>
+                        <p className="text-[9px] text-[#829187]">
+                          2 min ago
+                        </p>
                       </div>
                     </div>
 
-                    <p className="mt-3 text-xs leading-5 text-zinc-500">
+                    <p className="mt-3 text-xs leading-5 text-[#65766B]">
                       "You don't know me, but your work really inspired me."
                     </p>
                   </div>
@@ -181,62 +164,47 @@ const Features = () => {
             </div>
           </div>
 
-          {/* Feature 2: Personal Link */}
-          <div className="group relative overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-6 shadow-xl shadow-zinc-900/[0.04] transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+          {/* FEATURE 2: PERSONAL LINK */}
+          <div className={`${cardClass} p-6 sm:p-7`}>
             <div
-              className="absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl"
+              className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl"
               style={{ backgroundColor: "#F8E7C9", opacity: 0.8 }}
             />
 
             <div className="relative">
-              <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                style={{
-                  backgroundColor: "#F8E7C9",
-                  color: "#064E3B",
-                }}
-              >
-                🔗
-              </div>
+              <div className={iconClass}>🔗</div>
 
-              <p
-                className="mt-5 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "#064E3B" }}
-              >
-                Your space
-              </p>
+              <p className={labelClass}>Your space</p>
 
-              <h3 className="mt-2 text-xl font-bold text-zinc-900">
+              <h3 className={headingClass}>
                 Your own personal link
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-zinc-500">
+              <p className={descriptionClass}>
                 One simple link that people can use to send you anonymous
                 messages from anywhere.
               </p>
 
-              <div className="mt-7 rounded-2xl border border-zinc-100 p-3"
-                style={{ backgroundColor: "#FCF9F3" }}
-              >
+              <div className="mt-7 rounded-2xl border-2 border-[#173D32] bg-[#F5F3E9] p-3 shadow-[3px_3px_0px_#D8E2D6]">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm"
-                    style={{ color: "#064E3B" }}
-                  >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#D8E2D6] bg-white text-lg text-[#064E3B]">
                     ↗
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[9px] text-zinc-400">Your Whisperly</p>
-                    <p className="truncate text-xs font-semibold text-zinc-700">
+                    <p className="text-[9px] font-semibold text-[#829187]">
+                      Your Whisperly
+                    </p>
+
+                    <p className="truncate text-xs font-bold text-[#173D32]">
                       whisperly.app/yourname
                     </p>
                   </div>
                 </div>
 
                 <button
-                  className="mt-3 w-full rounded-xl py-2 text-[10px] font-semibold text-white transition hover:opacity-90"
-                  style={{ backgroundColor: "#064E3B" }}
+                  type="button"
+                  className="mt-3 w-full rounded-xl border-2 border-[#173D32] bg-[#064E3B] py-2.5 text-[10px] font-bold text-[#F8E7C9] shadow-[2px_2px_0px_#173D32] transition hover:bg-[#0B6B50] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 >
                   Copy link
                 </button>
@@ -244,87 +212,56 @@ const Features = () => {
             </div>
           </div>
 
-          {/* Feature 3: Private Inbox */}
-          <div className="group relative overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-6 shadow-xl shadow-zinc-900/[0.04] transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+          {/* FEATURE 3: PRIVATE INBOX */}
+          <div className={`${cardClass} p-6 sm:p-7`}>
             <div
-              className="absolute -left-16 -top-16 h-40 w-40 rounded-full blur-3xl"
+              className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full blur-3xl"
               style={{ backgroundColor: "#F8E7C9", opacity: 0.8 }}
             />
 
             <div className="relative">
-              <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                style={{
-                  backgroundColor: "#F8E7C9",
-                  color: "#064E3B",
-                }}
-              >
-                📥
-              </div>
+              <div className={iconClass}>📥</div>
 
-              <p
-                className="mt-5 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "#064E3B" }}
-              >
-                Stay organized
-              </p>
+              <p className={labelClass}>Stay organized</p>
 
-              <h3 className="mt-2 text-xl font-bold text-zinc-900">
+              <h3 className={headingClass}>
                 A private inbox
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-zinc-500">
+              <p className={descriptionClass}>
                 Keep all your anonymous messages in one clean and easy-to-use
                 inbox.
               </p>
 
-              <div
-                className="mt-7 rounded-2xl border border-zinc-100 p-3"
-                style={{ backgroundColor: "#FCF9F3" }}
-              >
+              <div className="mt-7 rounded-2xl border-2 border-[#173D32] bg-[#F5F3E9] p-3 shadow-[3px_3px_0px_#D8E2D6]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-zinc-700">
+                  <span className="text-[10px] font-extrabold text-[#173D32]">
                     Messages
                   </span>
 
-                  <span
-                    className="rounded-full px-2 py-1 text-[8px] font-semibold"
-                    style={{
-                      backgroundColor: "#F8E7C9",
-                      color: "#064E3B",
-                    }}
-                  >
+                  <span className="rounded-full border border-[#173D32] bg-[#F8E7C9] px-2 py-1 text-[8px] font-bold text-[#064E3B]">
                     3 new
                   </span>
                 </div>
 
-                <div className="mt-3 space-y-2">
-                  <div className="flex items-center gap-2 rounded-xl bg-white p-2.5 shadow-sm">
-                    <div
-                      className="h-7 w-7 rounded-full"
-                      style={{ backgroundColor: "#F8E7C9" }}
-                    />
+                <div className="mt-3 space-y-3">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#D8E2D6] bg-white p-2.5">
+                    <div className="h-7 w-7 shrink-0 rounded-full border border-[#D8E2D6] bg-[#F8E7C9]" />
 
-                    <div className="flex-1">
-                      <div className="h-2 w-16 rounded-full bg-zinc-200" />
-                      <div className="mt-1.5 h-1.5 w-24 rounded-full bg-zinc-100" />
+                    <div className="min-w-0 flex-1">
+                      <div className="h-2 w-16 rounded-full bg-[#D8E2D6]" />
+                      <div className="mt-1.5 h-1.5 w-24 max-w-full rounded-full bg-[#EEF0E8]" />
                     </div>
 
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: "#064E3B" }}
-                    />
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-[#0B6B50]" />
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-xl bg-white p-2.5 shadow-sm">
-                    <div
-                      className="h-7 w-7 rounded-full"
-                      style={{ backgroundColor: "#F8E7C9" }}
-                    />
+                  <div className="flex items-center gap-2 rounded-xl border border-[#D8E2D6] bg-white p-2.5">
+                    <div className="h-7 w-7 shrink-0 rounded-full border border-[#D8E2D6] bg-[#F8E7C9]" />
 
-                    <div className="flex-1">
-                      <div className="h-2 w-20 rounded-full bg-zinc-200" />
-                      <div className="mt-1.5 h-1.5 w-16 rounded-full bg-zinc-100" />
+                    <div className="min-w-0 flex-1">
+                      <div className="h-2 w-20 rounded-full bg-[#D8E2D6]" />
+                      <div className="mt-1.5 h-1.5 w-16 rounded-full bg-[#EEF0E8]" />
                     </div>
                   </div>
                 </div>
@@ -332,174 +269,139 @@ const Features = () => {
             </div>
           </div>
 
-          {/* Feature 4: Control */}
-          <div className="group relative overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-xl shadow-zinc-900/[0.04] transition duration-300 hover:-translate-y-2 hover:shadow-2xl lg:col-span-2">
+          {/* FEATURE 4: CONTROL */}
+          <div className={`${cardClass} lg:col-span-2`}>
             <div className="grid h-full md:grid-cols-2">
               <div
-                className="relative order-2 flex min-h-[300px] items-center justify-center overflow-hidden p-6 md:order-1"
-                style={{ backgroundColor: "#FCF9F3" }}
+                className={`${mockupClass} order-2 flex min-h-[300px] items-center justify-center border-t-2 border-[#D8E2D6] p-5 md:order-1 md:border-r-2 md:border-t-0`}
               >
-                <div
-                  className="absolute h-60 w-60 rounded-full border"
-                  style={{ borderColor: "#F8E7C9" }}
-                />
+                <div className="absolute h-60 w-60 rounded-full border-2 border-[#D8E2D6]" />
 
-                <div className="relative w-full max-w-[270px] rounded-2xl border border-zinc-200 bg-white p-5 shadow-xl">
-                  <div className="flex items-center justify-between">
+                <div className="relative w-full max-w-[270px] rounded-2xl border-2 border-[#173D32] bg-white p-4 shadow-[4px_4px_0px_#D8E2D6] sm:p-5">
+                  <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-[9px] text-zinc-400">
+                      <p className="text-[9px] font-semibold text-[#829187]">
                         Message controls
                       </p>
-                      <p className="mt-1 text-xs font-bold text-zinc-800">
+
+                      <p className="mt-1 text-xs font-extrabold text-[#173D32]">
                         Manage your space
                       </p>
                     </div>
 
-                    <div
-                      className="flex h-8 w-8 items-center justify-center rounded-lg"
-                      style={{
-                        backgroundColor: "#F8E7C9",
-                        color: "#064E3B",
-                      }}
-                    >
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#173D32] bg-[#F8E7C9] text-[#064E3B]">
                       ⚙
                     </div>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-b border-zinc-100 pb-4">
+                  <div className="mt-5 flex items-center justify-between gap-3 border-b border-[#E5E9DF] pb-4">
                     <div>
-                      <p className="text-[10px] font-semibold text-zinc-700">
+                      <p className="text-[10px] font-bold text-[#173D32]">
                         Anonymous messages
                       </p>
-                      <p className="mt-1 text-[8px] text-zinc-400">
+
+                      <p className="mt-1 text-[8px] text-[#829187]">
                         Allow people to message you
                       </p>
                     </div>
 
-                    <div
-                      className="flex h-5 w-9 items-center rounded-full p-0.5"
-                      style={{ backgroundColor: "#064E3B" }}
-                    >
-                      <span className="ml-auto h-4 w-4 rounded-full bg-white shadow-sm" />
+                    <div className="flex h-5 w-9 shrink-0 items-center rounded-full border border-[#173D32] bg-[#064E3B] p-0.5">
+                      <span className="ml-auto h-3.5 w-3.5 rounded-full bg-[#F8E7C9]" />
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-4 flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[10px] font-semibold text-zinc-700">
+                      <p className="text-[10px] font-bold text-[#173D32]">
                         Message moderation
                       </p>
-                      <p className="mt-1 text-[8px] text-zinc-400">
+
+                      <p className="mt-1 text-[8px] text-[#829187]">
                         Keep unwanted messages away
                       </p>
                     </div>
 
-                    <div className="flex h-5 w-9 items-center rounded-full bg-zinc-200 p-0.5">
-                      <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
+                    <div className="flex h-5 w-9 shrink-0 items-center rounded-full border border-[#D8E2D6] bg-[#EEF0E8] p-0.5">
+                      <span className="h-3.5 w-3.5 rounded-full border border-[#D8E2D6] bg-white" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="relative order-1 flex flex-col justify-center p-7 sm:p-9 md:order-2">
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                  style={{ backgroundColor: "#F8E7C9" }}
-                >
-                  🛡️
-                </div>
+              <div className="relative order-1 flex flex-col justify-center p-6 sm:p-9 md:order-2">
+                <div className={iconClass}>🛡️</div>
 
-                <p
-                  className="mt-5 text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: "#064E3B" }}
-                >
-                  Your control
-                </p>
+                <p className={labelClass}>Your control</p>
 
-                <h3 className="mt-2 text-2xl font-bold tracking-tight text-zinc-900">
+                <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#173D32]">
                   You're in control
                 </h3>
 
-                <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-500">
+                <p className="mt-3 max-w-sm text-sm leading-6 text-[#65766B]">
                   Your anonymous inbox should feel comfortable. Manage your
                   messages and control how people interact with your space.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-2">
-                  <span
-                    className="rounded-full px-3 py-1.5 text-[10px] font-medium"
-                    style={{
-                      backgroundColor: "#F8E7C9",
-                      color: "#064E3B",
-                    }}
-                  >
-                    Message controls
-                  </span>
-
-                  <span className="rounded-full bg-zinc-100 px-3 py-1.5 text-[10px] font-medium text-zinc-600">
-                    Privacy
-                  </span>
+                  {features.map((feature) => (
+                    <span
+                      key={feature}
+                      className="rounded-full border border-[#173D32] bg-[#F8E7C9] px-3 py-1.5 text-[10px] font-bold text-[#064E3B]"
+                    >
+                      {feature}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Feature 5: Simple Dashboard */}
-          <div className="group relative overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-6 shadow-xl shadow-zinc-900/[0.04] transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+          {/* FEATURE 5: SIMPLE DASHBOARD */}
+          <div className={`${cardClass} p-6 sm:p-7`}>
             <div
-              className="absolute -right-16 -bottom-16 h-40 w-40 rounded-full blur-3xl"
+              className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full blur-3xl"
               style={{ backgroundColor: "#F8E7C9", opacity: 0.8 }}
             />
 
             <div className="relative">
-              <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-xl"
-                style={{ backgroundColor: "#F8E7C9" }}
-              >
-                ✨
-              </div>
+              <div className={iconClass}>✨</div>
 
-              <p
-                className="mt-5 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "#064E3B" }}
-              >
-                Clean experience
-              </p>
+              <p className={labelClass}>Clean experience</p>
 
-              <h3 className="mt-2 text-xl font-bold text-zinc-900">
+              <h3 className={headingClass}>
                 Everything in one place
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-zinc-500">
+              <p className={descriptionClass}>
                 A distraction-free dashboard designed to keep your whispers
                 simple and easy to manage.
               </p>
 
               <div className="mt-7 grid grid-cols-2 gap-2">
-                <div
-                  className="rounded-xl border border-zinc-100 p-3"
-                  style={{ backgroundColor: "#FCF9F3" }}
-                >
-                  <p className="text-[9px] text-zinc-400">Total messages</p>
-                  <p className="mt-1 text-xl font-bold text-zinc-800">128</p>
-                  <span
-                    className="text-[8px] font-medium"
-                    style={{ color: "#064E3B" }}
-                  >
+                <div className="rounded-xl border-2 border-[#173D32] bg-[#F5F3E9] p-3">
+                  <p className="text-[9px] font-semibold text-[#65766B]">
+                    Total messages
+                  </p>
+
+                  <p className="mt-1 text-xl font-extrabold text-[#173D32]">
+                    128
+                  </p>
+
+                  <span className="text-[8px] font-bold text-[#0B6B50]">
                     +12 this week
                   </span>
                 </div>
 
-                <div
-                  className="rounded-xl border border-zinc-100 p-3"
-                  style={{ backgroundColor: "#FCF9F3" }}
-                >
-                  <p className="text-[9px] text-zinc-400">New whispers</p>
-                  <p className="mt-1 text-xl font-bold text-zinc-800">08</p>
-                  <span
-                    className="text-[8px] font-medium"
-                    style={{ color: "#064E3B" }}
-                  >
+                <div className="rounded-xl border-2 border-[#173D32] bg-[#F5F3E9] p-3">
+                  <p className="text-[9px] font-semibold text-[#65766B]">
+                    New whispers
+                  </p>
+
+                  <p className="mt-1 text-xl font-extrabold text-[#173D32]">
+                    08
+                  </p>
+
+                  <span className="text-[8px] font-bold text-[#0B6B50]">
                     Today
                   </span>
                 </div>
@@ -508,53 +410,37 @@ const Features = () => {
           </div>
         </div>
 
-        {/* Bottom CTA */}
-        <div
-          className="relative mx-auto mt-20 max-w-4xl overflow-hidden rounded-[28px] border px-7 py-10 text-center shadow-xl sm:px-12"
-          style={{
-            borderColor: "#F8E7C9",
-            background:
-              "linear-gradient(to bottom right, #F8E7C9, #FFFFFF, #FCF9F3)",
-            boxShadow: "0 20px 45px rgba(6,78,59,0.07)",
-          }}
-        >
+        {/* BOTTOM CTA */}
+        <div className="relative mx-auto mt-16 max-w-4xl overflow-hidden rounded-[24px] border-2 border-[#173D32] bg-[#F8E7C9] px-5 py-9 text-center shadow-[5px_5px_0px_#173D32] sm:mt-20 sm:rounded-[28px] sm:px-12 sm:py-11">
           <div
-            className="absolute left-1/2 top-[-100px] h-56 w-72 -translate-x-1/2 rounded-full blur-3xl"
-            style={{ backgroundColor: "#F8E7C9", opacity: 0.8 }}
+            className="pointer-events-none absolute -left-10 -top-24 h-56 w-72 rounded-full blur-3xl"
+            style={{ backgroundColor: "#FFFFFF", opacity: 0.65 }}
           />
 
           <div className="relative">
-            <div
-              className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl text-xl shadow-sm"
-              style={{
-                backgroundColor: "#064E3B",
-                color: "#F8E7C9",
-              }}
-            >
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#173D32] bg-[#064E3B] text-xl text-[#F8E7C9] shadow-[3px_3px_0px_#173D32]">
               💚
             </div>
 
-            <h3 className="mt-5 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
+            <h3 className="mt-5 text-2xl font-extrabold tracking-tight text-[#173D32] sm:text-3xl">
               Ready to hear what people really think?
             </h3>
 
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-zinc-500">
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-[#65766B]">
               Create your Whisperly link and give your friends, followers,
               and community a place to speak freely.
             </p>
 
-            <button
-              className="group mt-7 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:opacity-90"
-              style={{
-                backgroundColor: "#064E3B",
-                boxShadow: "0 8px 20px rgba(6,78,59,0.15)",
-              }}
+            <Link
+              to="/signup"
+              className="group mt-7 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#173D32] bg-[#064E3B] px-6 py-3.5 text-sm font-extrabold text-[#F8E7C9] shadow-[3px_3px_0px_#173D32] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#0B6B50] hover:shadow-[4px_4px_0px_#173D32] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
             >
               Create your Whisperly
-              <span className="transition-transform group-hover:translate-x-1">
+
+              <span className="transition-transform duration-200 group-hover:translate-x-1">
                 →
               </span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
