@@ -16,7 +16,7 @@ import Loader from "../components/Loader";
 import { useEffect } from "react";
 
 const MessageForm = () => {
-  const { username} = useParams();
+  const { username } = useParams();
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ const MessageForm = () => {
 
   useEffect(() => {
     const countLinkVisits = async () => {
-      if(!username) return;
+      if (!username) return;
       try {
         await api.get(`/auth/${username}`);
       } catch (error) {
@@ -34,8 +34,7 @@ const MessageForm = () => {
     };
 
     countLinkVisits();
-    
-  },[username])
+  }, [username]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,9 +43,9 @@ const MessageForm = () => {
 
     try {
       setIsLoading(true);
-      const response = await api.post(`/messages/${username}`, 
-        { message: message.trim() }
-      );
+      const response = await api.post(`/messages/${username}`, {
+        message: message.trim(),
+      });
 
       toast.success(response.data.message || "Message sent!");
       setSubmitted(true);
@@ -62,73 +61,76 @@ const MessageForm = () => {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#fafafa]">
-      {/* Background */}
+    <main className="relative min-h-screen overflow-hidden bg-[#FAF7EF] text-[#064E3B]">
+      {/* Brutalist background */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Dot grid */}
         <div
-          className="absolute inset-0 opacity-[0.45]"
+          className="absolute inset-0 opacity-[0.25]"
           style={{
-            backgroundImage: "radial-gradient(#d4d4d8 1px, transparent 1px)",
-            backgroundSize: "22px 22px",
+            backgroundImage:
+              "radial-gradient(#064E3B 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
           }}
         />
 
-        {/* Soft glows */}
-        <div className="absolute left-1/2 top-[-180px] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-violet-200/30 blur-[100px]" />
+        <div className="absolute -right-24 top-20 h-64 w-64 rounded-full border-[3px] border-[#064E3B]/10" />
 
-        <div className="absolute bottom-[-180px] left-[-120px] h-[350px] w-[350px] rounded-full bg-fuchsia-200/20 blur-[100px]" />
-
-        <div className="absolute right-[-120px] top-[30%] h-[300px] w-[300px] rounded-full bg-purple-200/20 blur-[100px]" />
+        <div className="absolute -left-24 bottom-24 h-72 w-72 rounded-full border-[3px] border-[#064E3B]/10" />
       </div>
 
       {/* Page */}
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-2xl flex-col px-4 py-6 sm:px-6 sm:py-8">
-        {/* Top brand */}
-        <Link to="/">
-          <div className="flex items-center justify-center">
-            <div className="flex items-center gap-2.5">
-              <WhisperlyLogo className="h-9 w-9" />
-            </div>
-          </div>
+        {/* Brand */}
+        <Link
+          to="/"
+          className="mx-auto flex w-fit items-center justify-center border-2 border-[#064E3B] bg-white p-2 shadow-[4px_4px_0px_#064E3B] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#064E3B]"
+        >
+          <WhisperlyLogo className="h-9 w-9" />
         </Link>
 
         {/* Main content */}
-        <div className="flex flex-1 items-center justify-center sm:py-4">
+        <div className="flex flex-1 items-center justify-center py-8 sm:py-10">
           <div className="w-full">
             {/* Owner profile */}
-            <div className="mb-6 text-center">
-              <span className="mt-4 flex items-center justify-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-100 text-violet-600">
-                  <User size={15} strokeWidth={3} />
+            <div className="mb-8 text-center">
+              <div className="mx-auto mb-4 flex w-fit items-center gap-2 border-2 border-[#064E3B] bg-[#F8E7C9] px-3 py-1.5 shadow-[3px_3px_0px_#064E3B]">
+                <LockKeyhole size={13} strokeWidth={2.5} />
+                <span className="text-[10px] font-black uppercase tracking-[0.16em]">
+                  Anonymous space
                 </span>
-                <h1 className="text-lg font-semibold tracking-tight text-gray-900">
-                  {username}
-                </h1>
-              </span>
+              </div>
 
-              <p className="mt-1 text-sm text-gray-500">
+              <div className="flex items-center justify-center gap-2.5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-[#064E3B] text-[#F8E7C9]">
+                  <User size={20} strokeWidth={2.5} />
+                </div>
+
+                <h1 className="max-w-[240px] truncate text-2xl font-black tracking-tight text-[#064E3B] sm:max-w-sm sm:text-3xl">
+                  @{username}
+                </h1>
+              </div>
+
+              <p className="mt-3 text-sm font-medium text-[#5F6D63]">
                 wants to hear what you really think.
               </p>
             </div>
 
             {/* Form card */}
-            <div className="overflow-hidden rounded-[30px] border border-gray-200/80 bg-white shadow-[0_20px_70px_rgba(79,70,229,0.08)]">
+            <div className="border-2 border-[#064E3B] bg-white shadow-[6px_6px_0px_#064E3B] sm:shadow-[8px_8px_0px_#064E3B]">
               {/* Card header */}
-              <div className="border-b border-gray-100 px-5 py-5 sm:px-7 sm:py-6">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
-                    <MessageCircle size={21} strokeWidth={1.8} />
+              <div className="border-b-2 border-[#064E3B] bg-[#F8E7C9] p-5 sm:p-6">
+                <div className="flex items-start gap-3.5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]">
+                    <MessageCircle size={23} strokeWidth={2.5} />
                   </div>
 
-                  <div>
-                    <h2 className="text-[16px] font-semibold text-gray-900">
-                      Send an anonymous whisper
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-black leading-tight tracking-tight sm:text-xl">
+                      SEND AN ANONYMOUS WHISPER
                     </h2>
 
-                    <p className="mt-1 text-xs leading-5 text-gray-500">
-                      Say whatever you've been wanting to say. They won't know
-                      it's you.
+                    <p className="mt-2 text-xs font-medium leading-5 text-[#526157] sm:text-sm">
+                      No names. No awkwardness. Just say what is on your mind.
                     </p>
                   </div>
                 </div>
@@ -139,7 +141,17 @@ const MessageForm = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="p-5 sm:p-7">
                     {/* Textarea */}
-                    <div className="relative rounded-[22px] border border-gray-200 bg-[#fafafa] p-1.5 transition focus-within:border-violet-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-50">
+                    <div className="border-2 border-[#064E3B] bg-[#FAF7EF] transition-colors focus-within:bg-white focus-within:shadow-[4px_4px_0px_#D7B77A]">
+                      <div className="flex items-center justify-between gap-2 border-b-2 border-[#064E3B] bg-white px-3 py-2.5 sm:px-4">
+                        <span className="text-[10px] font-black uppercase tracking-[0.12em]">
+                          Your message
+                        </span>
+
+                        <span className="border border-[#064E3B] bg-[#F8E7C9] px-2 py-1 text-[9px] font-black uppercase tracking-wider">
+                          Secret mode
+                        </span>
+                      </div>
+
                       <textarea
                         value={message}
                         onChange={(e) => {
@@ -149,20 +161,20 @@ const MessageForm = () => {
                         }}
                         placeholder="Write something you wouldn't normally say..."
                         rows={7}
-                        className="w-full resize-none border-0 bg-transparent px-4 py-4 text-[15px] leading-7 text-gray-800 outline-none placeholder:text-gray-400 sm:px-5 sm:py-5 sm:text-[16px]"
+                        className="w-full resize-none border-0 bg-transparent px-4 py-4 text-[15px] font-medium leading-7 text-[#173D2D] outline-none placeholder:text-[#92978E] sm:px-5 sm:py-5 sm:text-base"
                       />
 
-                      <div className="flex items-center justify-between px-3 pb-2 sm:px-4">
-                        <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
-                          <LockKeyhole size={12} />
-                          <span>Completely anonymous</span>
+                      <div className="flex items-center justify-between gap-2 border-t-2 border-dashed border-[#B9C6B8] px-3 py-3 sm:px-4">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#526157] sm:text-[11px]">
+                          <LockKeyhole size={13} strokeWidth={2.5} />
+                          <span>Identity protected</span>
                         </div>
 
                         <span
-                          className={`text-[11px] font-medium ${
+                          className={`shrink-0 text-xs font-black tabular-nums ${
                             message.length >= maxLength
-                              ? "text-red-500"
-                              : "text-gray-400"
+                              ? "text-red-600"
+                              : "text-[#064E3B]"
                           }`}
                         >
                           {message.length}/{maxLength}
@@ -174,7 +186,7 @@ const MessageForm = () => {
                     <button
                       type="submit"
                       disabled={!message.trim() || isloading}
-                      className="group mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-200/50 transition hover:shadow-xl hover:shadow-violet-200/60 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="group mt-5 flex w-full items-center justify-center gap-2.5 border-2 border-[#064E3B] bg-[#064E3B] px-5 py-4 text-sm font-black uppercase tracking-wide text-[#F8E7C9] shadow-[4px_4px_0px_#C5A66D] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#C5A66D] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_#C5A66D]"
                     >
                       {!isloading ? (
                         <span>Send anonymously</span>
@@ -183,17 +195,22 @@ const MessageForm = () => {
                       )}
 
                       <Send
-                        size={16}
-                        className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        size={17}
+                        strokeWidth={2.5}
+                        className="transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                       />
                     </button>
 
                     {/* Privacy note */}
-                    <div className="mt-4 flex items-center justify-center gap-2 text-center">
-                      <LockKeyhole size={13} className="text-gray-400" />
+                    <div className="mt-5 flex items-start justify-center gap-2 text-center">
+                      <LockKeyhole
+                        size={13}
+                        className="mt-0.5 shrink-0"
+                        strokeWidth={2.5}
+                      />
 
-                      <p className="text-[11px] leading-5 text-gray-400">
-                        No account required · Your identity stays private
+                      <p className="text-[10px] font-bold leading-5 text-[#68746A] sm:text-[11px]">
+                        NO ACCOUNT REQUIRED · YOUR IDENTITY STAYS PRIVATE
                       </p>
                     </div>
                   </div>
@@ -201,17 +218,21 @@ const MessageForm = () => {
               ) : (
                 /* Success state */
                 <div className="px-5 py-12 text-center sm:px-7 sm:py-16">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-violet-50 text-violet-600">
-                    <Check size={28} strokeWidth={2.2} />
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center border-2 border-[#064E3B] bg-[#DCEBDD] shadow-[5px_5px_0px_#064E3B]">
+                    <Check size={36} strokeWidth={3} />
                   </div>
 
-                  <h2 className="mt-5 text-xl font-bold tracking-tight text-gray-900">
-                    Whisper sent.
+                  <div className="mx-auto mt-7 w-fit border-2 border-[#064E3B] bg-[#F8E7C9] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.15em]">
+                    Delivered successfully
+                  </div>
+
+                  <h2 className="mt-4 text-2xl font-black tracking-tight sm:text-3xl">
+                    WHISPER SENT!
                   </h2>
 
-                  <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-gray-500">
-                    Your message has been delivered anonymously. They won't know
-                    it came from you.
+                  <p className="mx-auto mt-3 max-w-sm text-sm font-medium leading-6 text-[#667269]">
+                    Your message has been delivered anonymously. They won't
+                    know it came from you.
                   </p>
 
                   <button
@@ -219,7 +240,7 @@ const MessageForm = () => {
                       setMessage("");
                       setSubmitted(false);
                     }}
-                    className="mt-6 rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-50"
+                    className="mt-7 border-2 border-[#064E3B] bg-white px-5 py-3 text-xs font-black uppercase tracking-wide shadow-[4px_4px_0px_#064E3B] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-[#F8E7C9] hover:shadow-[2px_2px_0px_#064E3B] active:translate-x-1 active:translate-y-1 active:shadow-none"
                   >
                     Send another whisper
                   </button>
@@ -228,19 +249,19 @@ const MessageForm = () => {
             </div>
 
             {/* Create your own */}
-            <div className="mt-5 overflow-hidden rounded-[24px] border border-violet-100 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 p-5 sm:p-6">
+            <div className="mt-7 border-2 border-[#064E3B] bg-[#F8E7C9] p-5 shadow-[5px_5px_0px_#064E3B] sm:p-6">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-violet-600 shadow-sm">
-                    <Sparkles size={18} />
+                <div className="flex items-start gap-3.5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]">
+                    <Sparkles size={21} strokeWidth={2.5} />
                   </div>
 
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">
-                      Want anonymous messages too?
+                  <div className="min-w-0">
+                    <p className="text-sm font-black uppercase leading-5 tracking-tight">
+                      Your turn to receive whispers.
                     </p>
 
-                    <p className="mt-1 max-w-sm text-xs leading-5 text-gray-500">
+                    <p className="mt-2 max-w-sm text-xs font-medium leading-5 text-[#526157]">
                       Create your own Whisperly link and let people send you
                       honest messages.
                     </p>
@@ -249,20 +270,21 @@ const MessageForm = () => {
 
                 <Link
                   to="/"
-                  className="group flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-gray-800"
+                  className="group flex w-full shrink-0 items-center justify-center gap-2 border-2 border-[#064E3B] bg-white px-4 py-3 text-xs font-black uppercase tracking-wide shadow-[3px_3px_0px_#064E3B] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-[#064E3B] hover:text-[#F8E7C9] hover:shadow-[1px_1px_0px_#064E3B] active:translate-x-1 active:translate-y-1 active:shadow-none sm:w-auto"
                 >
                   <span>Create your Whisperly</span>
 
                   <ArrowUpRight
-                    size={14}
-                    className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    size={16}
+                    strokeWidth={2.5}
+                    className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   />
                 </Link>
               </div>
             </div>
 
             {/* Footer */}
-            <p className="mt-7 text-center text-[10px] font-medium tracking-wide text-gray-400">
+            <p className="mt-8 text-center text-[9px] font-black uppercase tracking-[0.16em] text-[#657267] sm:text-[10px]">
               POWERED BY WHISPERLY · SAY IT WITHOUT SAYING WHO
             </p>
           </div>
