@@ -28,6 +28,7 @@ const Login = () => {
     const newErrors = {};
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required!";
     } else if (!emailRegex.test(formData.email)) {
@@ -48,6 +49,7 @@ const Login = () => {
 
     const newErrors = inputValidation();
     setErrors(newErrors);
+
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -56,9 +58,9 @@ const Login = () => {
       setLoading(true);
 
       const response = await login(formData);
-      toast.success(response.message || "Login successfull!");
 
-      // empty the input feilds after successful form submission
+      toast.success(response.message || "Login successful!");
+
       setFormData({
         email: "",
         password: "",
@@ -78,38 +80,37 @@ const Login = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6 py-12">
-      {/* Background */}
+      {/* Minimal dotted background */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-50"
+        className="pointer-events-none absolute inset-0 opacity-40"
         style={{
           backgroundImage:
-            "radial-gradient(circle, #d4d4d8 1px, transparent 1px)",
+            "radial-gradient(circle, #064E3B 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
       />
 
-      {/* Soft gradient glows */}
-      <div className="pointer-events-none absolute left-1/2 top-[-180px] h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-200/40 blur-3xl" />
+      {/* Champagne accent blocks */}
+      <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rotate-12 bg-[#F8E7C9]/60" />
 
-      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-fuchsia-100/50 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 -rotate-12 bg-[#F8E7C9]/50" />
 
-      <div className="pointer-events-none absolute -right-32 top-1/3 h-80 w-80 rounded-full bg-indigo-100/50 blur-3xl" />
-
-      {/* Login Card */}
+      {/* Login content */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div
           onClick={() => navigate("/")}
-          className="mb-8 flex justify-center cursor-pointer"
+          className="mb-8 flex cursor-pointer justify-center"
         >
           <WhisperlyLogo />
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-[0_20px_70px_rgba(24,24,27,0.08)] sm:p-9">
+        {/* Login Card */}
+        <div className="border-2 border-[#064E3B] bg-white p-7 shadow-[8px_8px_0px_#064E3B] sm:p-9">
           {/* Heading */}
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-[-0.03em] text-zinc-900">
-              Welcome back
+            <h1 className="text-3xl font-extrabold tracking-[-0.05em] text-[#064E3B]">
+              Welcome back.
             </h1>
 
             <p className="mt-2 text-sm leading-6 text-zinc-500">
@@ -123,80 +124,63 @@ const Login = () => {
             <div>
               <label
                 htmlFor="email"
-                className="mb-2 block text-sm font-semibold text-zinc-700"
+                className="mb-2 block text-sm font-bold text-[#064E3B]"
               >
                 Email address
               </label>
 
-              <div className="relative">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="3" y="5" width="18" height="14" rx="3" />
-                    <path d="m4 7 8 6 8-6" />
-                  </svg>
-                </span>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                className={`w-full border-2 ${
+                  errors.email
+                    ? "border-red-500"
+                    : "border-zinc-200 focus:border-[#064E3B]"
+                } bg-zinc-50 px-4 py-3.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:bg-white`}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
 
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-4 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
               {errors.email && (
-                <p className="text-red-500 text-xs">{errors.email}</p>
+                <p className="mt-1.5 text-xs font-medium text-red-500">
+                  {errors.email}
+                </p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <div className="mb-2 flex items-center justify-between">
+              <div className="mb-2 flex items-center justify-between gap-3">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-zinc-700"
+                  className="block text-sm font-bold text-[#064E3B]"
                 >
                   Password
                 </label>
 
-                <p className="text-xs font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() =>
+                    toast("Password reset is not available yet.")
+                  }
+                  className="text-xs font-bold text-[#064E3B] underline decoration-[#F8E7C9] decoration-2 underline-offset-4 transition hover:text-[#0B6B50]"
+                >
                   Forgot password?
-                </p>
+                </button>
               </div>
 
               <div className="relative">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="4" y="10" width="16" height="10" rx="2" />
-                    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                  </svg>
-                </span>
-
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-3.5 pl-11 pr-12 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10"
+                  className={`w-full border-2 ${
+                    errors.password
+                      ? "border-red-500"
+                      : "border-zinc-200 focus:border-[#064E3B]"
+                  } bg-zinc-50 py-3.5 pl-4 pr-16 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:bg-white`}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -205,29 +189,30 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 transition hover:text-zinc-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-extrabold text-[#064E3B] transition hover:opacity-70 cursor-pointer"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? "◉" : "◌"}
+                  {showPassword ? "HIDE" : "SHOW"}
                 </button>
               </div>
+
               {errors.password && (
-                <p className="text-red-500 text-xs">{errors.password}</p>
+                <p className="mt-1.5 text-xs font-medium text-red-500">
+                  {errors.password}
+                </p>
               )}
             </div>
 
-            {/* Login button */}
+            {/* Sign in */}
             <button
               type="submit"
               disabled={loading}
-              className="group relative mt-2 flex w-full items-center justify-center overflow-hidden rounded-xl bg-zinc-900 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+              className="group mt-2 flex w-full items-center justify-center border-2 border-[#064E3B] bg-[#064E3B] px-5 py-3.5 text-sm font-bold text-white transition duration-200 hover:bg-white hover:text-[#064E3B] disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
             >
               {loading ? (
-                <>
-                  <Loader text="Logging in..." />
-                </>
+                <Loader text="Logging in..." />
               ) : (
-                <span className="relative flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   Sign in
                   <span className="transition-transform duration-200 group-hover:translate-x-1">
                     →
@@ -239,18 +224,20 @@ const Login = () => {
 
           {/* Divider */}
           <div className="my-7 flex items-center gap-3">
-            <div className="h-px flex-1 bg-zinc-100" />
-            <span className="text-xs text-zinc-400">or</span>
-            <div className="h-px flex-1 bg-zinc-100" />
+            <div className="h-px flex-1 bg-zinc-200" />
+            <span className="bg-[#F8E7C9] px-3 py-1 text-xs font-bold text-[#064E3B]">
+              OR
+            </span>
+            <div className="h-px flex-1 bg-zinc-200" />
           </div>
 
           {/* Signup */}
-          <p className="text-center text-sm text-zinc-500">
+          <p className="text-center text-sm text-zinc-600">
             Don't have an account?{" "}
             <button
               type="button"
               onClick={() => navigate("/signup")}
-              className="font-semibold text-violet-600 transition hover:text-violet-700 cursor-pointer"
+              className="font-extrabold text-[#064E3B] underline decoration-[#F8E7C9] decoration-2 underline-offset-4 transition hover:opacity-70 cursor-pointer"
             >
               Create one
             </button>
@@ -258,8 +245,10 @@ const Login = () => {
         </div>
 
         {/* Privacy text */}
-        <p className="mt-6 text-center text-xs leading-5 text-zinc-400">
-          Your conversations stay private.
+        <p className="mt-7 text-center text-xs leading-6 text-zinc-500">
+          <span className="font-bold text-[#064E3B]">
+            YOUR PRIVACY MATTERS.
+          </span>
           <br />
           Whisperly never reveals who sent an anonymous message.
         </p>

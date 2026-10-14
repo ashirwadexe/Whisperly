@@ -1,28 +1,59 @@
-
+import { useContext } from "react";
 import WhisperlyLogo from "./WhisperlyLogo";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { user } = useContext(AuthContext);
   return (
     <footer className="relative overflow-hidden border-t border-zinc-200 bg-white">
       {/* Very subtle background glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[600px] -translate-x-1/2 rounded-full bg-violet-100/40 blur-3xl" />
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[600px] -translate-x-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: "#F8E7C9", opacity: 0.4 }}
+      />
 
       <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
         {/* Main Footer */}
         <div className="grid gap-12 border-b border-zinc-200 py-16 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
-            <WhisperlyLogo />
+            <Link to="/" className="cursor-pointer">
+              <WhisperlyLogo />
+            </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-zinc-500">
-              A simple place for honest conversations. Create your personal
-              link and let people send you anonymous messages.
+              A simple place for honest conversations. Create your personal link
+              and let people send you anonymous messages.
             </p>
 
-            <button className="mt-6 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-zinc-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-violet-500/20">
-              Create your Whisperly
-              <span className="ml-1.5">→</span>
-            </button>
+            <div className="mt-6">
+              {!user ? (
+                <Link
+                  to="/signup"
+                  className="rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
+                  style={{
+                    backgroundColor: "#064E3B",
+                    boxShadow: "0 8px 20px rgba(6,78,59,0.15)",
+                  }}
+                >
+                  Create your Whisperly
+                  <span className="ml-1.5">→</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/dashboard"
+                  className=" rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
+                  style={{
+                    backgroundColor: "#064E3B",
+                    boxShadow: "0 8px 20px rgba(6,78,59,0.15)",
+                  }}
+                >
+                  Dashboard
+                  <span className="ml-1.5">→</span>
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Product */}
@@ -34,31 +65,31 @@ const Footer = () => {
             <div className="mt-5 space-y-3.5">
               <a
                 href="#features"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Features
               </a>
 
               <a
                 href="#how-it-works"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 How it works
               </a>
 
-              <a
-                href="/signup"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+              <Link
+                Link="/signup"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Get started
-              </a>
+              </Link>
 
-              <a
-                href="/login"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+              <Link
+                to="/login"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Log in
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -71,28 +102,28 @@ const Footer = () => {
             <div className="mt-5 space-y-3.5">
               <a
                 href="#about"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 About
               </a>
 
               <a
                 href="#contact"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Contact
               </a>
 
               <a
                 href="#privacy"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Privacy
               </a>
 
               <a
                 href="#terms"
-                className="block w-fit text-sm text-zinc-500 transition hover:text-violet-600"
+                className="block w-fit text-sm text-zinc-500 transition hover:text-[#064E3B]"
               >
                 Terms
               </a>
@@ -110,7 +141,7 @@ const Footer = () => {
               <a
                 href="#"
                 aria-label="X"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 hover:shadow-sm"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#064E3B]/30 hover:bg-[#F8E7C9] hover:text-[#064E3B] hover:shadow-sm"
               >
                 <svg
                   width="14"
@@ -126,7 +157,7 @@ const Footer = () => {
               <a
                 href="#"
                 aria-label="Instagram"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 hover:shadow-sm"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#064E3B]/30 hover:bg-[#F8E7C9] hover:text-[#064E3B] hover:shadow-sm"
               >
                 <svg
                   width="15"
@@ -152,7 +183,7 @@ const Footer = () => {
               <a
                 href="#"
                 aria-label="GitHub"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 hover:shadow-sm"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#064E3B]/30 hover:bg-[#F8E7C9] hover:text-[#064E3B] hover:shadow-sm"
               >
                 <svg
                   width="15"
@@ -178,7 +209,10 @@ const Footer = () => {
           </p>
 
           <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: "#064E3B" }}
+            />
             Made for honest conversations
           </div>
         </div>

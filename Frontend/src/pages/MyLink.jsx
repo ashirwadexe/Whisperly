@@ -5,7 +5,6 @@ import {
   Check,
   Share2,
   MessageCircle,
-  X,
   ExternalLink,
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
@@ -16,6 +15,7 @@ const MyLink = () => {
   const [copied, setCopied] = useState(false);
 
   const username = user?.username;
+
   const whisperlyLink = username
     ? `${window.location.origin}/${username}`
     : "";
@@ -44,7 +44,7 @@ const MyLink = () => {
       try {
         await navigator.share({
           title: "Send me an anonymous message",
-          text: "Send me an anonymous message on Whisperly 💜",
+          text: "Send me an anonymous message on Whisperly 💚",
           url: whisperlyLink,
         });
       } catch (error) {
@@ -58,8 +58,9 @@ const MyLink = () => {
   };
 
   const shareText = encodeURIComponent(
-    "Send me an anonymous message on Whisperly 💜"
+    "Send me an anonymous message on Whisperly 💚"
   );
+
   const encodedLink = encodeURIComponent(whisperlyLink);
 
   const shareApps = [
@@ -88,94 +89,97 @@ const MyLink = () => {
   return (
     <div className="min-h-[60vh] px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-xl">
+        <div className="overflow-hidden rounded-2xl border border-[#064E3B]/15 bg-white shadow-sm transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(6,78,59,0.06)] sm:p-1">
+          <div className="p-5 sm:p-6">
+            {/* Link Field */}
+            <div className="flex items-center gap-2 rounded-xl border border-[#064E3B]/15 bg-[#F8E7C9]/25 p-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F8E7C9] text-[#064E3B]">
+                <Link2 size={17} strokeWidth={1.8} />
+              </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5
-                        shadow-sm sm:p-6">
+              <div className="min-w-0 flex-1 truncate px-1 text-sm font-medium text-[#064E3B]">
+                {whisperlyLink || "Loading your link..."}
+              </div>
 
-          <div className="flex items-center gap-2 rounded-xl border
-                          border-gray-200 bg-gray-50 p-2">
-            <div className="min-w-0 flex-1 truncate px-2 text-sm text-gray-700">
-              {whisperlyLink || "Loading your link..."}
+              <button
+                type="button"
+                onClick={handleCopy}
+                disabled={!whisperlyLink}
+                className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-[#064E3B] px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#043D2E] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                <span>{copied ? "Copied" : "Copy"}</span>
+              </button>
             </div>
 
+            {/* Main Share Button */}
             <button
               type="button"
-              onClick={handleCopy}
+              onClick={handleShare}
               disabled={!whisperlyLink}
-              className="inline-flex shrink-0 items-center gap-2 rounded-lg
-                         bg-violet-600 px-3 py-2.5 text-sm font-medium
-                         text-white transition hover:bg-violet-700
-                         disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#064E3B] bg-[#064E3B] px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#043D2E] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              <span>{copied ? "Copied" : "Copy"}</span>
+              <Share2 size={17} />
+              Share your link
             </button>
-          </div>
 
-          <button
-            type="button"
-            onClick={handleShare}
-            disabled={!whisperlyLink}
-            className="mt-4 flex w-full items-center justify-center gap-2
-                       rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold
-                       text-white transition hover:bg-gray-800
-                       disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Share2 size={17} />
-            Share your link
-          </button>
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="h-px flex-1 bg-[#064E3B]/10" />
 
-          <div className="my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-gray-100" />
-            <span className="text-xs font-medium text-gray-400">
-              OR SHARE VIA
-            </span>
-            <div className="h-px flex-1 bg-gray-100" />
-          </div>
+              <span className="text-[11px] font-bold tracking-[0.12em] text-gray-400">
+                OR SHARE VIA
+              </span>
 
-          <div className="grid grid-cols-2 gap-3">
-            {shareApps.map((app) => (
-              <a
-                key={app.name}
-                href={whisperlyLink ? app.url : undefined}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  if (!whisperlyLink) e.preventDefault();
-                }}
-                className="flex items-center justify-between rounded-xl
-                           border border-gray-100 p-3.5 transition
-                           hover:border-violet-200 hover:bg-violet-50/40"
-              >
-                <span className="flex items-center gap-3">
-                  <span
-                    className={`flex h-9 w-9 items-center justify-center
-                                rounded-xl ${app.color}`}
-                  >
-                    {app.name === "WhatsApp" ? (
-                      <MessageCircle size={18} />
-                    ) : app.name === "Telegram" ? (
-                      <SendIcon />
-                    ) : app.name === "Facebook" ? (
-                      <FacebookIcon />
-                    ) : (
-                      <span className="text-sm font-bold">𝕏</span>
-                    )}
+              <div className="h-px flex-1 bg-[#064E3B]/10" />
+            </div>
+
+            {/* Social Sharing */}
+            <div className="grid grid-cols-2 gap-3">
+              {shareApps.map((app) => (
+                <a
+                  key={app.name}
+                  href={whisperlyLink ? app.url : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    if (!whisperlyLink) e.preventDefault();
+                  }}
+                  className="group flex items-center justify-between rounded-xl border border-[#064E3B]/10 bg-white p-3.5 transition-all duration-200 hover:border-[#064E3B]/30 hover:bg-[#F8E7C9]/25 active:scale-[0.98]"
+                >
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105 ${app.color}`}
+                    >
+                      {app.name === "WhatsApp" ? (
+                        <MessageCircle size={18} />
+                      ) : app.name === "Telegram" ? (
+                        <SendIcon />
+                      ) : app.name === "Facebook" ? (
+                        <FacebookIcon />
+                      ) : (
+                        <span className="text-sm font-bold">𝕏</span>
+                      )}
+                    </span>
+
+                    <span className="truncate text-sm font-semibold text-gray-700 transition-colors group-hover:text-[#064E3B]">
+                      {app.name}
+                    </span>
                   </span>
 
-                  <span className="text-sm font-medium text-gray-700">
-                    {app.name}
-                  </span>
-                </span>
+                  <ExternalLink
+                    size={14}
+                    className="shrink-0 text-gray-400 transition-colors group-hover:text-[#064E3B]"
+                  />
+                </a>
+              ))}
+            </div>
 
-                <ExternalLink size={14} className="text-gray-400" />
-              </a>
-            ))}
+            {/* Footer Note */}
+            <p className="mt-5 text-center text-xs leading-5 text-gray-500">
+              Anyone with your link can send you an anonymous message.
+            </p>
           </div>
-
-          <p className="mt-5 text-center text-xs leading-5 text-gray-400">
-            Anyone with your link can send you an anonymous message.
-          </p>
         </div>
       </div>
     </div>

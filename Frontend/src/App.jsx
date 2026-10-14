@@ -12,8 +12,8 @@ import ProtectedRoutes from './components/ProtectedRoutes'
 import Messages from './pages/Messages'
 import Favourites from './pages/Favourites'
 import MyLink from './pages/MyLink'
-import { Settings } from 'lucide-react'
 import DeleteAccount from './pages/DeleteAccount'
+import Settings from './pages/Settings'
 
 const App = () => {
   return (
