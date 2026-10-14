@@ -53,12 +53,14 @@ const Dashboard = () => {
           messages.map((item) => (
             <MessageCard
               key={item._id}
+              _id={item._id}
               message={item.message}
               time={
                 item.createdAt
                   ? new Date(item.createdAt).toLocaleString()
                   : "Recently"
               }
+              favourite={item.favourite}
             />
           ))
         )}

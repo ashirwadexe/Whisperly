@@ -1,26 +1,42 @@
 import React, { useState } from "react";
-import {
-  MessageCircle,
-  Star,
-  Share2,
-  Download,
-} from "lucide-react";
+import { MessageCircle, Star, Share2, Download } from "lucide-react";
 
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
-const MessageCard = ({ message, time }) => {
-  const [isFavourite, setIsFavourite] = useState(false);
+const MessageCard = ({
+  message,
+  _id,
+  time,
+  favourite: initialIsFavourite = false,
+}) => {
+  // to update the UI
+  const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
+  // to check is ui is running or no
+  const [isUpdatingFavourite, setIsUpdatingFavourite] = useState(false);
 
-  const handleFavourite = () => {
-    const nextValue = !isFavourite;
+  const handleFavourite = async () => {
+    // if api is running user click the star button then it will not owrk
+    if (isUpdatingFavourite) return;
+    try {
+      setIsUpdatingFavourite(true);
+      await api.patch(`/messages/${_id}/favourite`);
+      // ye UI ko update krega taki agar fav hai to star glow kre or fav nhi hia to star colorless ho
+      const nextValue = !isFavourite;
+      setIsFavourite(nextValue);
 
-    setIsFavourite(nextValue);
-
-    toast.success(
-      nextValue
-        ? "Added to favourites"
-        : "Removed from favourites"
-    );
+      toast.success(
+        nextValue ? "Added to favourites" : "Removed from favourites",
+      );
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to update favourite!",
+      );
+    } finally {
+      setIsUpdatingFavourite(false);
+    }
   };
 
   return (
@@ -43,9 +59,7 @@ const MessageCard = ({ message, time }) => {
                 Anonymous
               </h3>
 
-              <p className="mt-1 text-xs font-medium text-gray-400">
-                {time}
-              </p>
+              <p className="mt-1 text-xs font-medium text-gray-400">{time}</p>
             </div>
           </div>
         </div>
@@ -105,13 +119,9 @@ const MessageCard = ({ message, time }) => {
           >
             <Download size={17} strokeWidth={1.8} />
 
-            <span className="hidden sm:block">
-              Download
-            </span>
+            <span className="hidden sm:block">Download</span>
 
-            <span className="sm:hidden">
-              Save
-            </span>
+            <span className="sm:hidden">Save</span>
           </button>
         </div>
       </div>
