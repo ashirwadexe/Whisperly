@@ -223,16 +223,16 @@ const Hero = () => {
         {/* Question River */}
         <motion.div
           {...enter(0.58)}
-          className="relative z-[1] mt-14 overflow-hidden border-y border-[#DCE5D8] py-4"
+          className="relative z-[1] mt-10 overflow-hidden py-4"
         >
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#FDFBF5] to-transparent sm:w-28" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#FDFBF5] to-transparent sm:w-28" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-28" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-28" />
 
           <div className="flex w-max animate-[questionFlow_120s_linear_infinite] gap-10">
             {[...questions, ...questions].map((question, index) => (
               <span
                 key={index}
-                className="whitespace-nowrap text-sm font-semibold tracking-[-0.01em] text-[#65766B] sm:text-base"
+                className="whitespace-nowrap text-md font-semibold tracking-[-0.01em] text-[#505953] "
               >
                 {question}
               </span>
