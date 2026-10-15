@@ -19,12 +19,20 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
     "http://localhost:5173",
     "https://localhost:5173",
-];
+    process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(
     cors({
-        origin: allowedOrigins,
-        credentials: true
+        origin: (origin, callback) => {
+            // Allow requests without an Origin header, such as server-to-server requests
+            if (!origin || allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+
+            return callback(new Error("Not allowed by CORS"));
+        },
+        credentials: true,
     })
 );
 
@@ -40,7 +48,17 @@ app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/notifications", notificationRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`)
-    connectDB()
-});
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
