@@ -123,7 +123,8 @@ export const login = async (req, res) => {
       .cookie("token", token, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        sameSite: "strict",
+        secure: true,
+        sameSite: "none",
       })
       .json({
         message: `Welcome, ${user.username}!`,
@@ -144,15 +145,21 @@ export const logout = async (req, res) => {
   try {
     return res
       .status(200)
-      .cookie("token", "", { maxAge: 0, httpOnly: true, sameSite: "strict" })
+      .cookie("token", "", {
+        maxAge: 0,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .json({
         message: "Logged out!",
         success: true,
       });
   } catch (error) {
-    console.log("Logout error: ", error);
+    console.log("Logout error:", error);
     return res.status(500).json({
       message: error.message,
+      success: false,
     });
   }
 };
@@ -204,8 +211,9 @@ export const deleteAccount = async (req, res) => {
 
     // clearing user cookies(token)
     res.clearCookie("token", {
-        httpOnly: true,
-        sameSite: "strict",
+      httpOnly: true,
+      sameSite: "none",
+      secure: true
     });
 
     return res.status(200).json({
@@ -226,12 +234,12 @@ export const openMessageLink = async (req, res) => {
   try {
     const { username } = req.params;
     const user = await User.findOneAndUpdate(
-      {username},
-      {$inc : { linkVisits: 1}},
+      { username },
+      { $inc: { linkVisits: 1 } },
       {
         returnDocument: "After",
-        projection: "username linkVisits"
-      }
+        projection: "username linkVisits",
+      },
     );
 
     if (!user) {
@@ -239,14 +247,14 @@ export const openMessageLink = async (req, res) => {
         message: "User not found!",
         success: false,
       });
-    };
+    }
 
     return res.status(200).json({
       success: true,
       message: "Link visit count successfull!",
       user: {
         username: user.username,
-        linkVisits: user.linkVisits
+        linkVisits: user.linkVisits,
       },
     });
   } catch (error) {
