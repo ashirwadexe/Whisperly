@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowUpRight,
@@ -9,23 +9,45 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import WhisperlyLogo from "../components/WhisperlyLogo";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
-import { useEffect } from "react";
 
 const MessageForm = () => {
   const { username } = useParams();
+
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isloading, setIsLoading] = useState(false);
 
+  const shouldReduceMotion = useReducedMotion();
   const maxLength = 500;
 
+  // Reusable animation settings
+  const revealVariants = {
+    hidden: {
+      opacity: 0,
+      y: shouldReduceMotion ? 0 : 28,
+      filter: shouldReduceMotion ? "blur(0px)" : "blur(6px)",
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: shouldReduceMotion ? 0.15 : 0.65,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  // Count link visits
   useEffect(() => {
     const countLinkVisits = async () => {
       if (!username) return;
+
       try {
         await api.get(`/auth/${username}`);
       } catch (error) {
@@ -36,6 +58,7 @@ const MessageForm = () => {
     countLinkVisits();
   }, [username]);
 
+  // Submit anonymous message
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -43,6 +66,7 @@ const MessageForm = () => {
 
     try {
       setIsLoading(true);
+
       const response = await api.post(`/messages/${username}`, {
         message: message.trim(),
       });
@@ -62,7 +86,7 @@ const MessageForm = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FAF7EF] text-[#064E3B]">
-      {/* Brutalist background */}
+      {/* Animated background */}
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0 opacity-[0.25]"
@@ -73,37 +97,108 @@ const MessageForm = () => {
           }}
         />
 
-        <div className="absolute -right-24 top-20 h-64 w-64 rounded-full border-[3px] border-[#064E3B]/10" />
+        <motion.div
+          initial={false}
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, 5, 0], scale: [1, 1.025, 1] }
+          }
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -right-24 top-20 h-64 w-64 rounded-full border-[3px] border-[#064E3B]/10"
+        />
 
-        <div className="absolute -left-24 bottom-24 h-72 w-72 rounded-full border-[3px] border-[#064E3B]/10" />
+        <motion.div
+          initial={false}
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, -5, 0], scale: [1, 1.02, 1] }
+          }
+          transition={{
+            duration: 17,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -left-24 bottom-24 h-72 w-72 rounded-full border-[3px] border-[#064E3B]/10"
+        />
       </div>
 
       {/* Page */}
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-2xl flex-col px-4 py-6 sm:px-6 sm:py-8">
         {/* Brand */}
-        <Link
-          to="/"
-          className="mx-auto flex w-fit items-center justify-center border-2 border-[#064E3B] bg-white p-2 shadow-[4px_4px_0px_#064E3B] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#064E3B]"
+        <motion.div
+          initial={
+            shouldReduceMotion ? false : { opacity: 0, y: -14 }
+          }
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="mx-auto"
         >
-          <WhisperlyLogo className="h-9 w-9" />
-        </Link>
+          <Link
+            to="/"
+            className="flex w-fit items-center justify-center border-2 border-[#064E3B] bg-white p-2 shadow-[4px_4px_0px_#064E3B] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#064E3B]"
+          >
+            <WhisperlyLogo className="h-9 w-9" />
+          </Link>
+        </motion.div>
 
         {/* Main content */}
         <div className="flex flex-1 items-center justify-center py-8 sm:py-10">
           <div className="w-full">
             {/* Owner profile */}
-            <div className="mb-8 text-center">
-              <div className="mx-auto mb-4 flex w-fit items-center gap-2 border-2 border-[#064E3B] bg-[#F8E7C9] px-3 py-1.5 shadow-[3px_3px_0px_#064E3B]">
+            <motion.div
+              className="mb-8 text-center"
+              initial={shouldReduceMotion ? false : "hidden"}
+              animate="visible"
+              variants={revealVariants}
+              transition={{ delay: 0.08 }}
+            >
+              <motion.div
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : { opacity: 0, scale: 0.92 }
+                }
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: shouldReduceMotion ? 0 : 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mx-auto mb-4 flex w-fit items-center gap-2 border-2 border-[#064E3B] bg-[#F8E7C9] px-3 py-1.5 shadow-[3px_3px_0px_#064E3B]"
+              >
                 <LockKeyhole size={13} strokeWidth={2.5} />
                 <span className="text-[10px] font-black uppercase tracking-[0.16em]">
                   Anonymous space
                 </span>
-              </div>
+              </motion.div>
 
               <div className="flex items-center justify-center gap-2.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-[#064E3B] text-[#F8E7C9]">
+                <motion.div
+                  initial={
+                    shouldReduceMotion
+                      ? false
+                      : { opacity: 0, scale: 0.8, rotate: -8 }
+                  }
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 180,
+                    damping: 18,
+                    delay: shouldReduceMotion ? 0 : 0.12,
+                  }}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-[#064E3B] text-[#F8E7C9]"
+                >
                   <User size={20} strokeWidth={2.5} />
-                </div>
+                </motion.div>
 
                 <h1 className="max-w-[240px] truncate text-2xl font-black tracking-tight text-[#064E3B] sm:max-w-sm sm:text-3xl">
                   @{username}
@@ -113,16 +208,51 @@ const MessageForm = () => {
               <p className="mt-3 text-sm font-medium text-[#5F6D63]">
                 wants to hear what you really think.
               </p>
-            </div>
+            </motion.div>
 
             {/* Form card */}
-            <div className="border-2 border-[#064E3B] bg-white shadow-[6px_6px_0px_#064E3B] sm:shadow-[8px_8px_0px_#064E3B]">
+            <motion.div
+              initial={
+                shouldReduceMotion
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: 24,
+                      scale: 0.985,
+                      filter: "blur(5px)",
+                    }
+              }
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                filter: "blur(0px)",
+              }}
+              transition={{
+                duration: shouldReduceMotion ? 0.15 : 0.75,
+                delay: shouldReduceMotion ? 0 : 0.12,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="border-2 border-[#064E3B] bg-white shadow-[6px_6px_0px_#064E3B] sm:shadow-[8px_8px_0px_#064E3B]"
+            >
               {/* Card header */}
               <div className="border-b-2 border-[#064E3B] bg-[#F8E7C9] p-5 sm:p-6">
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]">
+                  <motion.div
+                    whileHover={
+                      shouldReduceMotion
+                        ? {}
+                        : { rotate: -4, y: -2 }
+                    }
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 15,
+                    }}
+                    className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]"
+                  >
                     <MessageCircle size={23} strokeWidth={2.5} />
-                  </div>
+                  </motion.div>
 
                   <div className="min-w-0">
                     <h2 className="text-lg font-black leading-tight tracking-tight sm:text-xl">
@@ -136,12 +266,24 @@ const MessageForm = () => {
                 </div>
               </div>
 
-              {/* Form */}
+              {/* Form and success state */}
               {!submitted ? (
                 <form onSubmit={handleSubmit}>
                   <div className="p-5 sm:p-7">
                     {/* Textarea */}
-                    <div className="border-2 border-[#064E3B] bg-[#FAF7EF] transition-colors focus-within:bg-white focus-within:shadow-[4px_4px_0px_#D7B77A]">
+                    <motion.div
+                      whileFocusWithin={
+                        shouldReduceMotion
+                          ? {}
+                          : { y: -2 }
+                      }
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 24,
+                      }}
+                      className="border-2 border-[#064E3B] bg-[#FAF7EF] transition-colors focus-within:bg-white focus-within:shadow-[4px_4px_0px_#D7B77A]"
+                    >
                       <div className="flex items-center justify-between gap-2 border-b-2 border-[#064E3B] bg-white px-3 py-2.5 sm:px-4">
                         <span className="text-[10px] font-black uppercase tracking-[0.12em]">
                           Your message
@@ -170,7 +312,13 @@ const MessageForm = () => {
                           <span>Identity protected</span>
                         </div>
 
-                        <span
+                        <motion.span
+                          animate={
+                            shouldReduceMotion
+                              ? {}
+                              : { scale: message.length === maxLength ? [1, 1.08, 1] : 1 }
+                          }
+                          transition={{ duration: 0.25 }}
                           className={`shrink-0 text-xs font-black tabular-nums ${
                             message.length >= maxLength
                               ? "text-red-600"
@@ -178,15 +326,30 @@ const MessageForm = () => {
                           }`}
                         >
                           {message.length}/{maxLength}
-                        </span>
+                        </motion.span>
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Submit */}
-                    <button
+                    <motion.button
                       type="submit"
                       disabled={!message.trim() || isloading}
-                      className="group mt-5 flex w-full items-center justify-center gap-2.5 border-2 border-[#064E3B] bg-[#064E3B] px-5 py-4 text-sm font-black uppercase tracking-wide text-[#F8E7C9] shadow-[4px_4px_0px_#C5A66D] transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#C5A66D] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_#C5A66D]"
+                      whileHover={
+                        shouldReduceMotion || !message.trim() || isloading
+                          ? {}
+                          : { y: -2, x: -1 }
+                      }
+                      whileTap={
+                        shouldReduceMotion
+                          ? {}
+                          : { scale: 0.99, y: 1, x: 1 }
+                      }
+                      transition={{
+                        type: "spring",
+                        stiffness: 350,
+                        damping: 20,
+                      }}
+                      className="group mt-5 flex w-full items-center justify-center gap-2.5 border-2 border-[#064E3B] bg-[#064E3B] px-5 py-4 text-sm font-black uppercase tracking-wide text-[#F8E7C9] shadow-[4px_4px_0px_#C5A66D] transition-shadow duration-150 hover:shadow-[5px_5px_0px_#C5A66D] active:shadow-none disabled:cursor-not-allowed disabled:opacity-45"
                     >
                       {!isloading ? (
                         <span>Send anonymously</span>
@@ -199,7 +362,7 @@ const MessageForm = () => {
                         strokeWidth={2.5}
                         className="transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                       />
-                    </button>
+                    </motion.button>
 
                     {/* Privacy note */}
                     <div className="mt-5 flex items-start justify-center gap-2 text-center">
@@ -216,11 +379,37 @@ const MessageForm = () => {
                   </div>
                 </form>
               ) : (
-                /* Success state */
-                <div className="px-5 py-12 text-center sm:px-7 sm:py-16">
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center border-2 border-[#064E3B] bg-[#DCEBDD] shadow-[5px_5px_0px_#064E3B]">
+                /* Animated success state */
+                <motion.div
+                  key="success"
+                  initial={
+                    shouldReduceMotion
+                      ? false
+                      : { opacity: 0, y: 16, scale: 0.98 }
+                  }
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="px-5 py-12 text-center sm:px-7 sm:py-16"
+                >
+                  <motion.div
+                    initial={
+                      shouldReduceMotion
+                        ? false
+                        : { scale: 0.75, rotate: -8 }
+                    }
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                    }}
+                    className="mx-auto flex h-20 w-20 items-center justify-center border-2 border-[#064E3B] bg-[#DCEBDD] shadow-[5px_5px_0px_#064E3B]"
+                  >
                     <Check size={36} strokeWidth={3} />
-                  </div>
+                  </motion.div>
 
                   <div className="mx-auto mt-7 w-fit border-2 border-[#064E3B] bg-[#F8E7C9] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.15em]">
                     Delivered successfully
@@ -235,26 +424,48 @@ const MessageForm = () => {
                     know it came from you.
                   </p>
 
-                  <button
+                  <motion.button
                     onClick={() => {
                       setMessage("");
                       setSubmitted(false);
                     }}
-                    className="mt-7 border-2 border-[#064E3B] bg-white px-5 py-3 text-xs font-black uppercase tracking-wide shadow-[4px_4px_0px_#064E3B] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-[#F8E7C9] hover:shadow-[2px_2px_0px_#064E3B] active:translate-x-1 active:translate-y-1 active:shadow-none"
+                    whileHover={shouldReduceMotion ? {} : { y: -2, x: -1 }}
+                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                    className="mt-7 border-2 border-[#064E3B] bg-white px-5 py-3 text-xs font-black uppercase tracking-wide shadow-[4px_4px_0px_#064E3B] transition-colors hover:bg-[#F8E7C9] active:shadow-none"
                   >
                     Send another whisper
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
 
             {/* Create your own */}
-            <div className="mt-7 border-2 border-[#064E3B] bg-[#F8E7C9] p-5 shadow-[5px_5px_0px_#064E3B] sm:p-6">
+            <motion.div
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{
+                once: true,
+                amount: 0.15,
+                margin: "0px 0px -35px 0px",
+              }}
+              className="mt-7 border-2 border-[#064E3B] bg-[#F8E7C9] p-5 shadow-[5px_5px_0px_#064E3B] sm:p-6"
+            >
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3.5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]">
+                  <motion.div
+                    whileHover={
+                      shouldReduceMotion ? {} : { rotate: 5, scale: 1.04 }
+                    }
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 16,
+                    }}
+                    className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#064E3B] bg-white shadow-[3px_3px_0px_#064E3B]"
+                  >
                     <Sparkles size={21} strokeWidth={2.5} />
-                  </div>
+                  </motion.div>
 
                   <div className="min-w-0">
                     <p className="text-sm font-black uppercase leading-5 tracking-tight">
@@ -281,12 +492,18 @@ const MessageForm = () => {
                   />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             {/* Footer */}
-            <p className="mt-8 text-center text-[9px] font-black uppercase tracking-[0.16em] text-[#657267] sm:text-[10px]">
+            <motion.p
+              initial={shouldReduceMotion ? false : { opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-8 text-center text-[9px] font-black uppercase tracking-[0.16em] text-[#657267] sm:text-[10px]"
+            >
               POWERED BY WHISPERLY · SAY IT WITHOUT SAYING WHO
-            </p>
+            </motion.p>
           </div>
         </div>
       </div>
