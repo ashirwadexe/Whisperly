@@ -14,11 +14,13 @@ import Favourites from './pages/Favourites'
 import MyLink from './pages/MyLink'
 import DeleteAccount from './pages/DeleteAccount'
 import Settings from './pages/Settings'
+import InstallPrompt from './components/InstallPrompt'
 
 const App = () => {
   return (
     <>
       <Toaster/>
+      <InstallPrompt/>
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/login' element={<Login/>} />
