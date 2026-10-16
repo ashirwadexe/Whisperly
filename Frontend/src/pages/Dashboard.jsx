@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import usePageTitle from "../hooks/usePageTitle";
+import FestivalGreeting from "../components/FestivalGreeting";
 
 const Dashboard = () => {
   usePageTitle("Dashboard")
@@ -58,6 +59,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen space-y-7 bg-[#FDFBF5] pb-10">
+      <FestivalGreeting/>
 
       {/* Dashboard heading */}
       <section className="relative overflow-hidden border-2 border-[#064E3B] bg-white p-5 shadow-[5px_5px_0px_#064E3B] sm:p-7">
