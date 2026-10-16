@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState } from "react";
 import Stats from "../components/Stats";
 import MessageCard from "../components/MessageCard";
@@ -16,11 +15,19 @@ import usePageTitle from "../hooks/usePageTitle";
 import FestivalGreeting from "../components/FestivalGreeting";
 
 const Dashboard = () => {
-  usePageTitle("Dashboard")
+  usePageTitle("Dashboard");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Handling deleted msg and updating ui by filtering the MSG whose id is matched with the deleted msg ID
+  const handleDeletedMessage = (deletedId) => {
+    setMessages((previousMessages) =>
+      previousMessages.filter((item) => item._id !== deletedId),
+    );
+  };
+
+  // Fetch messages API call
   const fetchMessages = useCallback(async (showRefresh = false) => {
     try {
       if (showRefresh) {
@@ -37,7 +44,7 @@ const Dashboard = () => {
       const sortedMessages = [...fetchedMessages].sort(
         (a, b) =>
           new Date(b.createdAt || 0).getTime() -
-          new Date(a.createdAt || 0).getTime()
+          new Date(a.createdAt || 0).getTime(),
       );
 
       setMessages(sortedMessages);
@@ -45,7 +52,7 @@ const Dashboard = () => {
       toast.error(
         error.response?.data?.message ||
           error.message ||
-          "Unable to fetch your whispers."
+          "Unable to fetch your whispers.",
       );
     } finally {
       setIsLoading(false);
@@ -59,17 +66,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen space-y-7 bg-[#FDFBF5] pb-10">
-      <FestivalGreeting/>
+      <FestivalGreeting />
 
       {/* Dashboard heading */}
       <section className="relative overflow-hidden border-2 border-[#064E3B] bg-white p-5 shadow-[5px_5px_0px_#064E3B] sm:p-7">
-
         {/* Decorative background */}
         <div className="pointer-events-none absolute -right-8 -top-8 h-36 w-36 rounded-full border-[18px] border-[#F8E7C9]/60" />
         <div className="pointer-events-none absolute right-10 top-12 h-3 w-3 bg-[#064E3B]/20" />
 
         <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-
           <div className="min-w-0">
             <div className="mb-3 inline-flex items-center gap-2 border-2 border-[#064E3B]/15 bg-[#F8E7C9]/50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-[#064E3B]">
               <Sparkles size={13} />
@@ -81,8 +86,8 @@ const Dashboard = () => {
             </h1>
 
             <p className="mt-2 max-w-lg text-sm leading-6 text-gray-600 sm:text-base">
-              Every message is a little secret. Read your anonymous
-              whispers and save the ones that matter.
+              Every message is a little secret. Read your anonymous whispers and
+              save the ones that matter.
             </p>
           </div>
 
@@ -98,7 +103,6 @@ const Dashboard = () => {
             />
             {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
-
         </div>
       </section>
 
@@ -107,7 +111,6 @@ const Dashboard = () => {
 
       {/* Messages section heading */}
       <section className="space-y-5">
-
         <div className="flex flex-col justify-between gap-3 border-b-2 border-[#064E3B]/15 pb-4 sm:flex-row sm:items-end">
           <div>
             <div className="flex items-center gap-2">
@@ -128,8 +131,7 @@ const Dashboard = () => {
           {!isLoading && (
             <div className="inline-flex items-center gap-2 self-start border-2 border-[#064E3B]/15 bg-white px-3 py-2 text-xs font-black text-[#064E3B] sm:self-auto">
               <span className="h-2 w-2 bg-[#064E3B]" />
-              {messages.length}{" "}
-              {messages.length === 1 ? "MESSAGE" : "MESSAGES"}
+              {messages.length} {messages.length === 1 ? "MESSAGE" : "MESSAGES"}
             </div>
           )}
         </div>
@@ -166,7 +168,6 @@ const Dashboard = () => {
             ))}
           </div>
         ) : messages.length === 0 ? (
-
           /* Empty state */
           <div className="relative overflow-hidden border-2 border-dashed border-[#064E3B]/30 bg-white px-5 py-12 text-center sm:py-16">
             <div className="pointer-events-none absolute -right-5 -top-5 h-24 w-24 border-[12px] border-[#F8E7C9]/70" />
@@ -180,8 +181,8 @@ const Dashboard = () => {
             </h3>
 
             <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-gray-500">
-              Your inbox is waiting! Share your Whisperly link with
-              friends and let the anonymous messages roll in.
+              Your inbox is waiting! Share your Whisperly link with friends and
+              let the anonymous messages roll in.
             </p>
 
             <div className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#064E3B]">
@@ -189,9 +190,7 @@ const Dashboard = () => {
               Head to My Link to get started
             </div>
           </div>
-
         ) : (
-
           /* Message cards */
           <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
             {messages.map((item) => (
@@ -205,11 +204,11 @@ const Dashboard = () => {
                     : "Recently"
                 }
                 favourite={item.favourite}
+                onDelete={handleDeletedMessage}
               />
             ))}
           </div>
         )}
-
       </section>
     </div>
   );

@@ -5,6 +5,8 @@ import {
   Share2,
   Download,
   ArrowUpRight,
+  Delete,
+  Trash,
 } from "lucide-react";
 
 import { toPng } from "html-to-image";
@@ -16,6 +18,7 @@ const MessageCard = ({
   _id,
   time,
   favourite: initialIsFavourite = false,
+  onDelete,
 }) => {
   // Reference to the part of the card that should become an image
   const cardRef = useRef(null);
@@ -23,10 +26,35 @@ const MessageCard = ({
   // Favourite state
   const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
   const [isUpdatingFavourite, setIsUpdatingFavourite] = useState(false);
-
   // Download state
   const [isDownloading, setIsDownloading] = useState(false);
+  // Delete State
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  // Delete Message Button API Call
+  const handleDeleteMessage = async () => {
+    if(isDeleting) return;
+
+    try {
+      setIsDeleting(true);
+      const response = await api.delete(`messages/${_id}`);
+
+      // tell dashboard which message is deleted for updating the UI
+      onDelete?.(_id);
+      
+      toast.success(response.data.message || "Message Deleted!");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        error.message ||
+        "Failed, Try Again!"
+      )
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Toggle Favourite Button API Call
   const handleFavourite = async () => {
     if (isUpdatingFavourite) return;
 
@@ -237,7 +265,7 @@ const MessageCard = ({
       </div>
 
       {/* Actions stay outside the exported image */}
-      <div className="mt-4 grid grid-cols-3 gap-2 border-t-2 border-[#064E3B] pt-4">
+      <div className="mt-4 grid grid-cols-4 gap-2 border-t-2 border-[#064E3B] pt-4">
         {/* Favourite */}
         <button
           type="button"
@@ -294,6 +322,18 @@ const MessageCard = ({
           <span className="sm:hidden">
             {isDownloading ? "Saving..." : "Save"}
           </span>
+        </button>
+        
+        {/* Delete */}
+        <button
+          type="button"
+          onClick={handleDeleteMessage}
+          disabled={isDeleting}
+          className="flex min-w-0 items-center justify-center gap-2 border-2 border-[#064E3B] bg-white px-2 py-3 text-xs font-black text-[#064E3B] shadow-[3px_3px_0px_#064E3B] transition-all duration-150 hover:bg-[#F8E7C9] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:cursor-not-allowed disabled:opacity-60 sm:px-3"
+        >
+          <Trash size={16} strokeWidth={2.2} className="shrink-0" />
+
+          <span>{isDeleting ? "Deleting..." : "Delete"}</span>
         </button>
       </div>
     </article>
